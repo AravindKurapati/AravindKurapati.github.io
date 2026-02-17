@@ -1,646 +1,758 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abhishek Adinarayanappa | Portfolio</title>
-    <style>
-        /* Prevent animations during resize for better performance */
-        .resize-animation-stopper * {
-            animation: none !important;
-            transition: none !important;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kurapati Sreenivas Aravind | Portfolio</title>
+  <meta name="description" content="ML Engineer & Software Developer — NYU CS grad, specializing in computer vision, self-supervised learning, and scalable data systems."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Ensure images scale properly */
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-    </style>
-    <link rel="stylesheet" href="css/fonts.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #111118;
+      --bg3: #18181f;
+      --border: #2a2a35;
+      --accent: #7c6aff;
+      --accent2: #00e5bc;
+      --text: #e8e8f0;
+      --text-muted: #888899;
+      --text-dim: #555566;
+      --card-bg: #13131a;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem;
+      height: 60px;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+    nav ul { display: flex; gap: 2rem; list-style: none; }
+    nav ul a {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: var(--accent2); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 6rem 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      align-items: center;
+    }
+    .hero-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: var(--accent2);
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .hero-tag::before {
+      content: '';
+      width: 24px; height: 1px;
+      background: var(--accent2);
+    }
+    h1.hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      margin-bottom: 0.8rem;
+    }
+    h1.hero-name em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-title {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.6rem;
+    }
+    .hero-bio {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 520px;
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.65rem 1.4rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid var(--accent);
+    }
+    .btn-primary:hover { background: #6a58f0; border-color: #6a58f0; transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+
+    .hero-visual {
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .avatar-wrap {
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      padding: 3px;
+      position: relative;
+    }
+    .avatar-inner {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: var(--bg3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 5rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.04em;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+    .stat-chip {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.7rem 1rem;
+    }
+    .stat-chip .num {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent2);
+    }
+    .stat-chip .lbl {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* bg decoration */
+    .bg-glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.12;
+      pointer-events: none;
+    }
+    .bg-glow-1 { width: 600px; height: 600px; background: var(--accent); top: -100px; right: -100px; }
+    .bg-glow-2 { width: 400px; height: 400px; background: var(--accent2); bottom: -50px; left: -50px; }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 3rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 3rem;
+      line-height: 1.1;
+    }
+    .section-title span { color: var(--accent2); }
+
+    /* ── EDUCATION ── */
+    #education { background: var(--bg2); }
+    .edu-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.8rem 2rem;
+      display: flex; gap: 1.5rem; align-items: flex-start;
+    }
+    .edu-icon {
+      width: 48px; height: 48px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 1rem; color: #fff;
+    }
+    .edu-school { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
+    .edu-degree { color: var(--text-muted); font-size: 0.875rem; margin: 0.2rem 0; }
+    .edu-meta {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--text-dim); margin-top: 0.4rem;
+    }
+
+    /* ── EXPERIENCE ── */
+    .timeline { position: relative; }
+    .timeline::before {
+      content: ''; position: absolute;
+      left: 11px; top: 8px; bottom: 0;
+      width: 1px; background: var(--border);
+    }
+    .exp-item { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; }
+    .exp-dot {
+      width: 24px; height: 24px; flex-shrink: 0; margin-top: 2px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: var(--bg);
+      position: relative; z-index: 1;
+    }
+    .exp-dot.active { background: var(--accent); }
+    .exp-body {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.4rem 1.6rem;
+      flex: 1;
+      transition: border-color 0.2s;
+    }
+    .exp-body:hover { border-color: var(--accent); }
+    .exp-role { font-family: var(--font-display); font-size: 1rem; font-weight: 700; }
+    .exp-company {
+      font-family: var(--font-mono); font-size: 0.75rem;
+      color: var(--accent2); margin: 0.2rem 0 0.8rem;
+    }
+    .exp-date { color: var(--text-dim); font-family: var(--font-mono); font-size: 0.68rem; }
+    .exp-body ul { padding-left: 1.1rem; color: var(--text-muted); font-size: 0.875rem; }
+    .exp-body li { margin-bottom: 0.35rem; }
+
+    /* ── SKILLS ── */
+    #skills { background: var(--bg2); }
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .skill-group {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.4rem;
+    }
+    .skill-group-title {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem;
+    }
+    .skill-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .pill {
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .pill:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── PROJECTS ── */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem; }
+    .project-card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.6rem;
+      transition: border-color 0.2s, transform 0.2s;
+      display: flex; flex-direction: column;
+    }
+    .project-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .project-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .project-tag {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--accent2); background: rgba(0,229,188,0.08);
+      border: 1px solid rgba(0,229,188,0.2); border-radius: 3px; padding: 0.15rem 0.5rem;
+    }
+    .project-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 0.7rem; }
+    .project-desc { color: var(--text-muted); font-size: 0.86rem; flex: 1; margin-bottom: 1.2rem; }
+    .project-links { display: flex; gap: 0.75rem; margin-top: auto; }
+    .proj-link {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--accent); text-decoration: none;
+      display: flex; align-items: center; gap: 0.3rem;
+      transition: color 0.2s;
+    }
+    .proj-link:hover { color: var(--accent2); }
+
+    /* ── PUBLICATIONS ── */
+    #publications { background: var(--bg2); }
+    .pub-card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+      padding: 1.6rem 2rem; margin-bottom: 1.2rem;
+      display: flex; gap: 1.5rem; align-items: flex-start;
+      transition: border-color 0.2s;
+    }
+    .pub-card:hover { border-color: var(--accent); }
+    .pub-year {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: 1.4rem; color: var(--accent);
+      flex-shrink: 0; width: 48px;
+    }
+    .pub-title { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .pub-venue { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-dim); margin-bottom: 0.5rem; }
+    .pub-link {
+      font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent);
+      text-decoration: none;
+    }
+    .pub-link:hover { color: var(--accent2); }
+
+    /* ── CONTACT ── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; max-width: 600px; }
+    .contact-card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+      padding: 1.4rem 1.6rem; display: flex; gap: 1rem; align-items: center;
+      text-decoration: none; color: var(--text);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .contact-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .contact-icon {
+      width: 38px; height: 38px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .contact-lbl { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+    .contact-val { font-size: 0.85rem; color: var(--text); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 3rem; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-dim);
+    }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent2); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.7s ease forwards; }
+    .delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .delay-3 { animation-delay: 0.35s; opacity: 0; }
+    .delay-4 { animation-delay: 0.5s; opacity: 0; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 820px) {
+      nav ul { display: none; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-visual { order: -1; }
+      .avatar-wrap { width: 200px; height: 200px; }
+      .contact-grid { grid-template-columns: 1fr; }
+      section { padding: 3.5rem 1.5rem; }
+      nav { padding: 0 1.5rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav id="navbar">
-        <div class="container">
-            <div class="logo">Abhishek A</div>
-            <ul class="nav-links">
-                <li><a href="#hero">About</a></li>
-                <li><a href="#education">Education</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#publications">Publications</a></li>
-                <li><a href="#achievements">Achievements</a></li>
-                <li><a href="#contact">Contact</a></li>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#hero">KSA<span>.</span></a>
+    <ul>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="hero-grid">
+      <div>
+        <div class="hero-tag fade-up">ML Engineer · Software Developer</div>
+        <h1 class="hero-name fade-up delay-1">Kurapati<br><em>Sreenivas</em><br>Aravind</h1>
+        <p class="hero-title fade-up delay-2">MS Computer Science @ NYU &nbsp;·&nbsp; Class of 2025</p>
+        <p class="hero-bio fade-up delay-3">
+          Building at the intersection of computer vision, self-supervised learning, and scalable data infrastructure. From histopathology pipelines at NYU Langone to production data systems at Verizon — I care about systems that are both rigorous and robust.
+        </p>
+        <div class="hero-btns fade-up delay-4">
+          <a href="#contact" class="btn btn-primary">Get in touch</a>
+          <a href="#projects" class="btn btn-outline">View Projects</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div>
+          <div class="avatar-wrap">
+            <div class="avatar-inner">KA</div>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-chip">
+              <div class="num">0.84</div>
+              <div class="lbl">AUC — lymphoma</div>
+            </div>
+            <div class="stat-chip">
+              <div class="num">850K+</div>
+              <div class="lbl">histo tiles trained</div>
+            </div>
+            <div class="stat-chip">
+              <div class="num">52%</div>
+              <div class="lbl">query speedup</div>
+            </div>
+            <div class="stat-chip">
+              <div class="num">2</div>
+              <div class="lbl">IEEE publications</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="container">
+      <div class="section-label">Background</div>
+      <h2 class="section-title">Education<span>.</span></h2>
+      <div class="edu-card">
+        <div class="edu-icon">NYU</div>
+        <div>
+          <div class="edu-school">New York University</div>
+          <div class="edu-degree">Master of Science in Computer Science</div>
+          <div class="edu-meta">
+            <span>📍 New York, NY</span>
+            <span>Sep 2023 – May 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="container">
+      <div class="section-label">Career</div>
+      <h2 class="section-title">Experience<span>.</span></h2>
+      <div class="timeline">
+
+        <div class="exp-item">
+          <div class="exp-dot active"></div>
+          <div class="exp-body">
+            <div class="exp-role">Machine Learning Research Intern</div>
+            <div class="exp-company">NYU Langone Health · <span class="exp-date">Feb 2025 – May 2025</span></div>
+            <ul>
+              <li>Built whole slide image classification pipeline using Vision Transformers and Multiple Instance Learning, achieving AUC of 0.84 for follicular lymphoma diagnosis.</li>
+              <li>Benchmarked 5+ transformer architectures and attention mechanisms, identifying 2× performance improvement through architecture selection.</li>
+              <li>Combining WSI images with RNA-seq data for improved multimodal prediction.</li>
             </ul>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+          </div>
         </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero">
-        <div class="container">
-            <div class="hero-image">
-                <img src="assets/images/profile.jpg" alt="Abhishek Adinarayanappa">
-                <div class="hero-buttons">
-                    <a href="#contact" class="btn">Contact Me</a>
-                    <a href="https://drive.google.com/file/d/13847bQmN9k1rO55kzhAz6ELSzVCUSjzt/view?usp=sharing" class="btn btn-outline" download>Resume</a>
-                </div>
-            </div>
-            <div class="hero-content">
-                <h1>Abhishek Adinarayanappa</h1>
-                <h2>Computer Science Graduate Student at New York University</h2>
-                <p class="hero-summary">
-                    Hey there! I’m Abhishek, a former Software Developer currently pursuing my Master’s in Computer Science at New York University. My journey began with a Bachelor's in Computer Science from PES University, where I first discovered my passion for software development and problem-solving.
-                </p>
-                <p class="hero-summary">
-                    Over the years, I worked as a System Software Development Engineer at Intel Corporation, driving projects and delivering impactful solutions across full-stack development, cloud, and DevOps. My work contributed to several key initiatives that supported Intel’s cloud and edge computing efforts, helping accelerate development cycles and deliver value to customers and internal teams.
-                </p>
-                <p class="hero-summary">
-                    I'm passionate about building scalable backend systems and distributed architectures, along with applying machine learning in real-world applications. Whether it’s designing cloud-native services, architecting data pipelines, or integrating AI into production workflows, I enjoy working on systems that are robust, efficient, and impactful.
-                </p>
-                <p class="hero-summary">
-                    Outside of school and work, I enjoy diving into new technologies, building side projects, and contributing to open-source whenever I can. If you're curious about what I've been working on or have an interesting idea to collaborate on, feel free to reach out!
-                </p>
-            </div>
+        <div class="exp-item">
+          <div class="exp-dot"></div>
+          <div class="exp-body">
+            <div class="exp-role">Research Assistant</div>
+            <div class="exp-company">NYU Langone Health · <span class="exp-date">Jun 2024 – Dec 2024</span></div>
+            <ul>
+              <li>Reproduced Barlow Twins self-supervised learning on HPC infrastructure, training InceptionV3 on 850K+ histopathology tiles with 78% accuracy.</li>
+              <li>Designed custom SLURM job scheduling scripts for training across NYU's compute cluster.</li>
+              <li>Implemented HDF5-based data storage for efficient tile loading.</li>
+            </ul>
+          </div>
         </div>
-    </section>
 
-    <!-- Education Section -->
-    <section id="education" class="section">
-        <div class="container">
-            <h2 class="section-title">Education</h2>
-
-            <!-- NYU Card -->
-            <div class="education-card">
-                <div class="edu-logo">
-                    <img src="assets/images/nyu.png" alt="NYU Logo">
-                </div>
-                <div class="edu-details">
-                    <div class="edu-header">
-                        <h3>New York University</h3>
-                        <span class="location">Brooklyn, NY</span>
-                    </div>
-                    <div class="degree-row">
-                        <p class="degree">Master of Science, Computer Science</p>
-                        <span class="date">Sept 2024 - May 2026</span>
-                    </div>
-                    <p class="gpa">GPA: 3.89/4.0</p>
-                    <p class="courses">Relevant Coursework: Design & Analysis of Algorithms, Machine Learning, Big Data, Deep Learning, Cloud Computing, Blockchain</p>
-                    <a href="https://drive.google.com/file/d/1Pa9zZTh3eAFhjmxSwwZWSqbCYXOc6GZl/view?usp=sharing" class="transcript-link" target="_blank">
-                        View Official Transcript
-                    </a>
-                </div>
-            </div>
-
-            <!-- PES University Card -->
-            <div class="education-card">
-                <div class="edu-logo">
-                    <img src="assets/images/pes.png" alt="PES University Logo">
-                </div>
-                <div class="edu-details">
-                    <div class="edu-header">
-                        <h3>PES University</h3>
-                        <span class="location">Bengaluru, India</span>
-                    </div>
-                    <div class="degree-row">
-                        <p class="degree">Bachelor of Technology, Computer Science and Engineering</p>
-                        <span class="date">Aug 2018 - May 2022</span>
-                    </div>
-                    <p class="gpa">GPA: 8.62/10.0</p>
-                    <p class="courses">Relevant Coursework: Data Structures, Operating Systems, Computer Networks, Linear Algebra, Introduction to Data Science, Database Management System</p>
-                    <a href="https://drive.google.com/file/d/1xQue8XAORnj6Vy6yK2nFbFNX9uCrRLmq/view?usp=sharing" class="transcript-link" target="_blank">
-                        View Official Transcript
-                    </a>
-                </div>
-            </div>
+        <div class="exp-item">
+          <div class="exp-dot"></div>
+          <div class="exp-body">
+            <div class="exp-role">Software Developer</div>
+            <div class="exp-company">Verizon · <span class="exp-date">Jul 2022 – Aug 2023</span></div>
+            <ul>
+              <li>Rebuilt data ingestion pipelines using Delta Lake and AWS (S3, SageMaker), cutting processing time from 15 to 5 minutes for real-time analytics.</li>
+              <li>Optimized SQL analytics layer, achieving 52% query speed improvement (2.5s → 1.2s) serving 10K+ daily queries via AWS Lambda and API Gateway.</li>
+              <li>Developed PostgreSQL token management system, reducing query latency by 55% and supporting distributed processing at scale.</li>
+              <li>Deployed production systems using Jenkins CI/CD pipelines, maintaining 99.9% uptime across critical analytics infrastructure.</li>
+            </ul>
+          </div>
         </div>
-    </section>
 
-    <!-- Experience Section -->
-    <section id="experience" class="section bg-light">
-        <div class="container">
-            <h2 class="section-title">Work Experience</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-logo">
-                        <img src="assets/images/marketeq.png" alt="Marketeq Logo">
-                    </div>
-                    <div class="timeline-content">
-                        <h3>Backend Engineering Intern</h3>
-                        <h4>Marketeq Digital Inc., Miami, FL</h4>
-                        <p class="timeline-date">June 2025 - August 2025</p>
-                        <ul>
-                            <li>Engineered a scalable autocomplete feature in NestJS, capable of processing 500+ location queries per minute through LocationIQ API, significantly improving accuracy and enhancing the overall
-                                user experience for location-based searches.</li>
-                            <li>Implemented a MongoDB driven job title search with over 250 curated entries for a user profile interface, supporting real-time input and retrieval, augmented with semantic category
-                                matching using the all-MiniLM-L6-v2 model, profanity filtering and spell checks.</li>
-                            <li>Enhanced the website’s interfaces by developing reusable React components and optimizing backend APIs, resolving 20+ P1 bugs.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-logo">
-                        <img src="assets/images/intel.jpg" alt="Intel Logo">
-                    </div>
-                    <div class="timeline-content">
-                        <h3>System Software Development Engineer</h3>
-                        <h4>Intel Corporation, Bengaluru</h4>
-                        <p class="timeline-date">July 2022 - July 2024</p>
-                        <ul>
-                            <li>Designed and maintained 6+ scalable microservices across 3 programming languages as part of the Intel® Edge Insights for Industrial project.</li>
-                            <li>Developed a portable storage abstraction to optimize performance across storage and compute elements, boosting model training
-                                throughput on Intel GPUs using efficient multithreading techniques.</li>
-                            <li>Developed of a Software as a Service (SaaS) based implementation of a Trust Authority, enabling remote verification of
-                                the trustworthiness of compute assets through attestation, policy compliance, and reputation/risk data analysis.</li>
-                            <li>Led coordinated release management processes with cross-functional teams and project managers, ensuring on-time delivery of mission-critical software with zero high-severity post-launch issues.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-logo">
-                        <img src="assets/images/intel.jpg" alt="Intel Logo">
-                    </div>
-                    <div class="timeline-content">
-                        <h3>Software Engineering Intern</h3>
-                        <h4>Intel Corporation, Bengaluru</h4>
-                        <p class="timeline-date">January 2022 - June 2022</p>
-                        <ul>
-                            <li>Orchestrated a fully functional Proof of Concept for distributed tracing using OpenTelemetry and Jaeger for the Intel® Edge Insights for Industrial project.</li>
-                            <li>Enhanced error reporting and logging features in the project, reducing issue resolution time.</li>
-                            <li>Integrated Prometheus to enable real-time monitoring of 100+ metrics/min, maintaining balance between performance and efficiency.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-logo">
-                        <img src="assets/images/kreditbee.png" alt="Kreditbee Logo">
-                    </div>
-                    <div class="timeline-content">
-                        <h3>Data Engineering Intern</h3>
-                        <h4>Kreditbee, Bengaluru</h4>
-                        <p class="timeline-date">August 2021 - November 2021</p>
-                        <ul>
-                            <li>Streamlined monthly ECL reports generation with Python, pandas, and openpyxl on MySQL data.</li>
-                            <li>Configured and deployed Lyft Amundsen for data exploration within the AWS cloud environment.</li>
-                            <li>Developed Python scripts to automate data ingestion from multiple sources into Amundsen, improving data accessibility and reducing manual integration.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <div class="exp-item">
+          <div class="exp-dot"></div>
+          <div class="exp-body">
+            <div class="exp-role">Software Engineering Intern</div>
+            <div class="exp-company">Verizon · <span class="exp-date">Feb 2022 – Jun 2022</span></div>
+            <ul>
+              <li>Built software delivery prediction models achieving 86–94% accuracy using cloud-based data analysis and feature engineering.</li>
+            </ul>
+          </div>
         </div>
-    </section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="section">
-        <div class="container">
-            <h2 class="section-title">Technical Skills</h2>
-            <div class="skills-container">
-                <div class="skill-category">
-                    <h3>Programming Languages</h3>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <img src="assets/icons/python.svg" alt="Python">
-                            <span>Python</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/C.svg" alt="C">
-                            <span>C</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/cpp3.svg" alt="C++">
-                            <span>C++</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/golang.svg" alt="Golang">
-                            <span>Golang</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/java.svg" alt="Java">
-                            <span>Java</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/javascript.svg" alt="JavaScript">
-                            <span>JavaScript</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/typescript.svg" alt="TypeScript">
-                            <span>TypeScript</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/html5.svg" alt="HTML">
-                            <span>HTML</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/css.svg" alt="CSS">
-                            <span>CSS</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/solidity.svg" alt="Solidity">
-                            <span>Solidity</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>Technologies & Frameworks</h3>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <img src="assets/icons/pytorch.svg" alt="PyTorch">
-                            <span>PyTorch</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/tensorflow.svg" alt="TensorFlow">
-                            <span>TensorFlow</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/react.svg" alt="React">
-                            <span>React</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/nodejs.svg" alt="Node.js">
-                            <span>Node.js</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/nestjs.svg" alt="Nest.js">
-                            <span>NestJS</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/numpy.svg" alt="Numpy">
-                            <span>Numpy</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/pandas.svg" alt="Pandas">
-                            <span>Pandas</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/scikitlearn.svg" alt="Scikit-learn">
-                            <span>Scikit-learn</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/api.svg" alt="REST API">
-                            <span>REST API</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/bash.svg" alt="Linux shell">
-                            <span>Linux Shell Scripting</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>Cloud & DevOps</h3>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <img src="assets/icons/aws.svg" alt="AWS">
-                            <span>AWS</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/azure.svg" alt="Azure">
-                            <span>Azure</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/docker.svg" alt="Docker">
-                            <span>Docker</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/kubernetes.svg" alt="Kubernetes">
-                            <span>Kubernetes</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/helm.svg" alt="Helm">
-                            <span>Helm</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/terraform.svg" alt="Terraform">
-                            <span>Terraform</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/ansible.svg" alt="Ansible">
-                            <span>Ansible</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/prometheus.svg" alt="Prometheus">
-                            <span>Prometheus</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/jenkins.svg" alt="Jenkins">
-                            <span>Jenkins</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/git.svg" alt="Git">
-                            <span>Git</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/github.svg" alt="Github">
-                            <span>Github</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>Database & Data Engineering</h3>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <img src="assets/icons/mysql.svg" alt="MYSQL">
-                            <span>MYSQL</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/postgres.svg" alt="PostgreSQL">
-                            <span>PostgreSQL</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/elasticsearch.svg" alt="Elasticsearch">
-                            <span>Elasticsearch</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/dynamodb.svg" alt="DynamoDB">
-                            <span>DynamoDB</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/mongodb.svg" alt="MongoDB">
-                            <span>MongoDB</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/hadoop.svg" alt="Hadoop">
-                            <span>Hadoop</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/spark.svg" alt="Spark">
-                            <span>Spark</span>
-                        </div>
-                        <div class="skill-item">
-                            <img src="assets/icons/kafka.svg" alt="Kafka">
-                            <span>Kafka</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="container">
+      <div class="section-label">Toolkit</div>
+      <h2 class="section-title">Skills<span>.</span></h2>
+      <div class="skills-grid">
+        <div class="skill-group">
+          <div class="skill-group-title">Languages</div>
+          <div class="skill-pills">
+            <span class="pill">Python</span>
+            <span class="pill">Java</span>
+            <span class="pill">SQL</span>
+            <span class="pill">JavaScript</span>
+          </div>
         </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="section bg-light">
-        <div class="container">
-            <h2 class="section-title">Projects</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>GitGrep - A Cloud-Native Vulnerability Scanner using Semgrep & Gemini AI</h3>
-                        <span class="project-tag">Cloud | AWS | AI</span>
-                    </div>
-                    <p class="project-desc"></p>
-                    <ul class="project-features">
-                        <li>Built a scalable, serverless vulnerability scanning platform using AWS Lambda, API Gateway, S3, and DynamoDB to analyze codebases on demand.</li>
-                        <li>Integrated Semgrep for static code analysis across multiple programming languages, and used Google Gemini to generate contextual, AI-powered remediation suggestions.</li>
-                        <li>Implemented Git-based caching mechanisms to detect redundant scans, reducing unnecessary compute usage by approximately 40%.</li>
-                        <li>Designed a responsive web frontend enabling intuitive repository submission, real-time scan tracking, and results visualization.</li>
-                        <li>Enabled asynchronous scan workflows with Amazon SQS and used Amazon SES to deliver detailed scan reports and recommendations via email.</li>
-                    </ul>
-                    <a href="https://github.com/Abhi270600/GitGrep" class="project-link" target="_blank">View on GitHub</a>
-                </div>
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>BlockTalk - A Decentralized Chat App based on Blockchain</h3>
-                        <span class="project-tag">Blockchain | Decentralized Messaging</span>
-                    </div>
-                    <p class="project-desc"></p>
-                    <ul class="project-features">
-                        <li>Designed and built a Web3-powered chat platform using Ethereum smart contracts and IPFS to enable secure, censorship-resistant messaging.</li>
-                        <li>Implemented 1-on-1 and group chat functionality using Solidity, React.js, and Ethers.js, supporting both text and media exchange with full data integrity.</li>
-                        <li>Integrated IPFS via Pinata for decentralized media storage, optimized gas usage, and enabled seamless wallet-based authentication through MetaMask.</li>
-                    </ul>
-                    <a href="https://github.com/Abhi270600/BlockTalk" class="project-link" target="_blank">View on GitHub</a>
-                </div>
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>Natural language Based Photo Album</h3>
-                        <span class="project-tag">Cloud | AWS | Image Recognition</span>
-                    </div>
-                    <p class="project-desc"></p>
-                    <ul class="project-features">
-                        <li>Developed a serverless photo search application using AWS Lambda, Amazon Lex, Rekognition, and Elasticsearch to enable intelligent image search.</li>
-                        <li>Enabled natural language queries to detect people, objects, landmarks, and other entities within uploaded images using Rekognition and Lex integration.</li>
-                        <li>Built and exposed a fully functional REST API via API Gateway, with a user-facing frontend hosted on Amazon S3.</li>
-                        <li>Automated infrastructure provisioning and deployment using AWS CodePipeline and CloudFormation for continuous delivery and scalability.</li>
-                    </ul>
-                    <a href="https://github.com/Abhi270600/CC-Assignment3-Photo-Album" class="project-link" target="_blank">View on GitHub</a>
-                </div>
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>Dining Concierge Chatbot</h3>
-                        <span class="project-tag">Cloud | AWS</span>
-                    </div>
-                    <p class="project-desc"></p>
-                    <ul class="project-features">
-                        <li>Developed a restaurant recommendation web app using AWS Lambda, API Gateway, Amazon S3, Amazon Lex and Yelp API.</li>
-                        <li>Stored 5000+ restaurant records in DynamoDB and indexing them in Elasticsearch for efficient querying.</li>
-                        <li>Implemented backend workflows with SQS and utilized Amazon SES to deliver restaurant recommendations via email within 2 minutes.</li>
-                    </ul>
-                    <a href="https://github.com/Abhi270600/CC_Chatbot" class="project-link" target="_blank">View on GitHub</a>
-                </div>
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>DigiPulse - Real Time Trend Analysis using Distributed Stream Processing</h3>
-                        <span class="project-tag">Big Data | AI</span>
-                    </div>
-                    <p class="project-desc"></p>
-                    <ul class="project-features">
-                        <li>Built a real-time, scalable data pipeline for analyzing BlueSky tweets using Apache Kafka, MongoDB, Elasticsearch (vector DB), and Spark ML.</li>
-                        <li>Processed millions of tweets, enabling high-throughput ingestion, clustering, and dynamic summarization of trending topics.</li>
-                        <li>Integrated Google Gemini API to generate real-time summaries of clustered topics, enhancing interpretability of large-scale social data.</li>
-                        <li>Designed with extensibility in mind, allowing seamless future integration with additional data sources and ML models.</li>
-                    </ul>
-                    <a href="https://github.com/Abhi270600/DigiPulse" class="project-link" target="_blank">View on GitHub</a>
-                </div>
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>Intel® Trust Authority</h3>
-                        <span class="project-tag">Cloud | DevOps | AWS | Azure</span>
-                    </div>
-                    <p class="project-desc"></p>
-                    <ul class="project-features">
-                        <li>Project Amber aims to create the industry’s first independent Trust Authority.</li>
-                        <li>The program is a SaaS (Software as a Service) implementation of a Trust Authority that provides remote verification of the trustworthiness of a compute asset based on attestation, policy, and reputation/risk data.</li>
-                        <li>Provisioned secure development environments in ITA using Terraform and Ansible, utilizing resources from AWS and Azure to enhance remote attestation capabilities across cloud and edge environments, ensuring 99.95% uptime.</li>
-                        <li>Automated end-to-end environment refresh and attestation with GitHub Actions, reducing tenant onboarding time from 10 minutes to 3
-                        minutes.
-                        <li>Deployed the control plane & data plane services onto the environments using Helm charts and established a CI/CD pipeline for nightly runs.</li>
-                    </ul>
-                    <a href="https://www.intel.com/content/www/us/en/security/trust-authority.html" class="project-link" target="_blank">View Official Page</a>
-                </div>
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>Intel® Edge Insights for Industrial</h3>
-                        <span class="project-tag">IoT | Edge Computing | Microservices</span>
-                    </div>
-                    <p class="project-desc"></p>
-                    <ul class="project-features">
-                        <li>Intel® Edge Insights for Industrial focused on building the infrastructure layer for developing a smart scalable factory solutions using microservices and edge computing.</li>
-                        <li>Intel® Edge Insights for Industrial comes as a pre-validated, ready-to-deploy software reference design for video and time series data ingestion.</li>
-                        <li>Enabled independent builds and deployments of microservices using Docker and Kubernetes, and successfully deployed the stack on Intel Developer Cloud as a working proof of concept.</li>
-                        <li>Enhanced platform security and developer efficiency by automating Snyk-based vulnerability checks and writing unit tests with 96% code coverage using Pytest.</li>
-                    </ul>
-                    <a href="https://www.intel.com/content/www/us/en/internet-of-things/industrial-iot/edge-insights-industrial.html" class="project-link" target="_blank">View Official Page</a>
-                </div>
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>Smart Traffic Light Controller Using Deep Reinforcement Learning</h3>
-                        <span class="project-tag">Deep Learning | SUMO </span>
-                    </div>
-                    <p class="project-desc"></p>
-                    <ul class="project-features">
-                        <li>Implemented a smart traffic agent using a SUMO simulator capable of controlling traffic congestions at intersections.</li>
-                        <li>Optimized flow for 100+ vehicles using concepts Artificial Neural Networks and Deep Reinforcement Learning</li>
-                        <li>Employed a Deep Q-Learning methodology to reduce the average queue length by ∼80% and average delay from 20 seconds to ∼8 seconds.</li>
-                    </ul>
-                    <a href="https://github.com/Abhi270600/Smart-traffic-light-controller-using-deep-reinforcement-learning" class="project-link" target="_blank">View on GitHub</a>
-                </div>
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>Yet Another Centralized Scheduler</h3>
-                        <span class="project-tag">Big Data | python | socket programming </span>
-                    </div>
-                    <p class="project-desc"></p>
-                    <ul class="project-features">
-                        <li>Developed a centralized scheduling framework in Python for Hadoop 1.0 with custom job scheduling and resource allocation.</li>
-                        <li>Programmed and evaluated 3 scheduling algorithms (First Come First Serve, Round Robin and Least Loaded), ensuring scalability,
-                        parallelism, fault tolerance, and load balancing.</li>
-                    </ul>
-                    <a href="https://github.com/Abhi270600/Yet-Another-Centralized-Scheduler" class="project-link" target="_blank">View on GitHub</a>
-                </div>
-            </div>
+        <div class="skill-group">
+          <div class="skill-group-title">ML / AI</div>
+          <div class="skill-pills">
+            <span class="pill">PyTorch</span>
+            <span class="pill">TensorFlow</span>
+            <span class="pill">Scikit-learn</span>
+            <span class="pill">HuggingFace</span>
+            <span class="pill">vLLM</span>
+            <span class="pill">OpenCV</span>
+            <span class="pill">CUDA</span>
+          </div>
         </div>
-    </section>
-
-    <!-- Publications Section -->
-    <section id="publications" class="section">
-        <div class="container">
-            <h2 class="section-title">Publications</h2>
-            <div class="publication-card">
-                <h3>Smart Traffic Light Controller using Deep Reinforcement Learning</h3>
-                <p class="pub-journal">IEEE 3rd International Conference for Emerging Technologies</p>
-                <p class="pub-desc"><strong>A. Abhishek, P. Nayak, K. P. Hegde, A. Lakshmi Prasad and K. S. Nagegowda, ”Smart Traffic Light Controller using Deep Reinforcement Learning,” 2022 3rd International Conference for Emerging Technology (INCET), Belgaum, India, 2022, pp. 1-5, doi: 10.1109/INCET54531.2022.9824501.</strong></p>
-                <ul class="pub-highlights">
-                    <li>Proposed a deep reinforcement learning-based approach for adaptive traffic signal control, addressing real-world congestion challenges using simulation-driven experimentation.</li>
-                    <li>The simulation environment is built using SUMO and interfaced through the TraCI API for real-time interaction.</li>
-                    <li>Conducted extensive performance analysis of ANN and CNN models across varying intersection complexities, highlighting the impact of architecture and training depth.</li>
-                    <li>State representation is handled using Discrete Traffic State Encoding (DTSE), with an epsilon-greedy policy and experience replay for training.</li>
-                    <li>The model behavior is evaluated using metrics like queue length and cumulative delay, demonstrating measurable improvements over traditional signal timing strategies.</li>
-                </ul>
-
-                <a href="https://ieeexplore.ieee.org/document/9824501" class="pub-link" target="_blank">
-                    <i class="fas fa-external-link-alt"></i> View on IEEE Xplore
-                </a>
-            </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Infrastructure</div>
+          <div class="skill-pills">
+            <span class="pill">Docker</span>
+            <span class="pill">Kubernetes</span>
+            <span class="pill">AWS S3</span>
+            <span class="pill">SageMaker</span>
+            <span class="pill">Lambda</span>
+            <span class="pill">EC2</span>
+            <span class="pill">GCP</span>
+            <span class="pill">SLURM</span>
+            <span class="pill">Git</span>
+          </div>
         </div>
-    </section>
-
-    <!-- Achievements Section -->
-    <section id="achievements" class="section bg-light">
-        <div class="container">
-            <h2 class="section-title">Achievements</h2>
-            <div class="achievements-grid">
-                <div class="achievement-card">
-                    <div class="achievement-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h3>Graduate School of Engineering Scholarship</h3>
-                    <p>Honored with merit scholarship upon admission to New York University, recognizing exceptional academic achievements and potential for excellence in engineering studies.</p>
-                </div>
-                <div class="achievement-card">
-                    <div class="achievement-icon">
-                        <i class="fas fa-award"></i>
-                    </div>
-                    <h3>Intel Department Recognition Award (Y2023 Q2)</h3>
-                    <p>For exemplary achievements towards delivering to the vision of a distributed computing platform for the intelligent network and edge. Received this award as part of Intel® Edge Insights for Industrial.</p>
-                </div>
-                <div class="achievement-card">
-                    <div class="achievement-icon">
-                        <i class="fas fa-lightbulb"></i>
-                    </div>
-                    <h3>Intel Flex Fearless Innovation Award (Y2022 Q3)</h3>
-                    <p>For excellent work and role modeling on Innovation activities at Intel Flex</p>
-                </div>
-                <div class="achievement-card">
-                    <div class="achievement-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h3>Prof. MRD Merit Scholarship (Semester 3)</h3>
-                    <p>Ranked in the top 20% at PES University with a SGPA of 8.77 in Semester 3.</p>
-                </div>
-            </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Data</div>
+          <div class="skill-pills">
+            <span class="pill">PostgreSQL</span>
+            <span class="pill">Delta Lake</span>
+            <span class="pill">Apache Spark</span>
+            <span class="pill">Pandas</span>
+            <span class="pill">NumPy</span>
+            <span class="pill">REST APIs</span>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="section">
-        <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <div class="contact-columns">
-                <!-- Left Column -->
-                <div class="contact-col">
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <img src="assets/icons/gmail.svg" alt="Email">
-                        </div>
-                        <div class="contact-info">
-                            <h3>Email</h3>
-                            <a href="mailto:aa12037@nyu.edu">aa12037@nyu.edu</a>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <img src="assets/icons/phone.svg" alt="Phone">
-                        </div>
-                        <div class="contact-info">
-                            <h3>Phone</h3>
-                            <a href="tel:5166468996">(516) 646-8996</a>
-                        </div>
-                    </div>
-                </div>
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="container">
+      <div class="section-label">Work</div>
+      <h2 class="section-title">Projects<span>.</span></h2>
+      <div class="projects-grid">
 
-                <!-- Right Column -->
-                <div class="contact-col">
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <img src="assets/icons/linkedin.svg" alt="LinkedIn">
-                        </div>
-                        <div class="contact-info">
-                            <h3>LinkedIn</h3>
-                            <a href="https://linkedin.com/in/abhishek-a-26b805211" target="_blank">abhishek-a-26b805211</a>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <img src="assets/icons/github.svg" alt="GitHub">
-                        </div>
-                        <div class="contact-info">
-                            <h3>GitHub</h3>
-                            <a href="https://github.com/Abhi270600" target="_blank">Abhi270600</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="project-card">
+          <div class="project-tags">
+            <span class="project-tag">Computer Vision</span>
+            <span class="project-tag">GCP</span>
+            <span class="project-tag">Docker</span>
+          </div>
+          <div class="project-title">AlphaFold Protein Structure Prediction Pipeline</div>
+          <div class="project-desc">Dockerized full-scale AlphaFold inference pipeline on GCP with multi-GPU training, managing a 2.8TB database on a $300 budget. Debugged CUDA driver conflicts, container mount configurations, and GPU memory allocation.</div>
+          <div class="project-links">
+            <a href="https://github.com" class="proj-link">↗ GitHub</a>
+            <a href="https://medium.com" class="proj-link">↗ Blog</a>
+          </div>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="social-links">
-                <a href="https://github.com/Abhi270600" target="_blank"><img src="assets/icons/github.svg" alt="GitHub"></a>
-                <a href="https://linkedin.com/in/abhishek-a-26b805211" target="_blank"><img src="assets/icons/linkedin.svg" alt="LinkedIn"></a>
-                <a href="mailto:aa12037@nyu.edu"><img src="assets/icons/gmail.svg" alt="Email"></a>
-            </div>
+        <div class="project-card">
+          <div class="project-tags">
+            <span class="project-tag">LLM</span>
+            <span class="project-tag">RAG</span>
+            <span class="project-tag">Ongoing</span>
+          </div>
+          <div class="project-title">FinSight: LLM-Powered SEC Filings Analysis</div>
+          <div class="project-desc">Full-stack RAG application for financial document Q&A using LLaMA 3.1 8B served via vLLM on dual GPUs. Optimized inference through batching and quantization — currently achieving 0.23s TTFT and 23.8 tokens/s throughput.</div>
+          <div class="project-links">
+            <a href="https://github.com" class="proj-link">↗ GitHub</a>
+            <a href="https://medium.com" class="proj-link">↗ Blog</a>
+          </div>
         </div>
-    </footer>
 
-    <script src="js/smooth-scroll.js"></script>
-    <script src="js/main.js"></script>
+        <div class="project-card">
+          <div class="project-tags">
+            <span class="project-tag">Self-supervised</span>
+            <span class="project-tag">HPC</span>
+          </div>
+          <div class="project-title">Barlow Twins on Histopathology Data</div>
+          <div class="project-desc">Reproduced Barlow Twins self-supervised learning on NYU HPC, training InceptionV3 on 850K+ histopathology tiles. Built custom SLURM scripts and HDF5 pipelines for efficient large-scale training.</div>
+          <div class="project-links">
+            <a href="https://github.com" class="proj-link">↗ GitHub</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-tags">
+            <span class="project-tag">Vision Transformer</span>
+            <span class="project-tag">MIL</span>
+            <span class="project-tag">Multimodal</span>
+          </div>
+          <div class="project-title">WSI Classification for Follicular Lymphoma</div>
+          <div class="project-desc">End-to-end whole slide image classification pipeline using Vision Transformers and Multiple Instance Learning. Achieved AUC of 0.84; extending to multimodal prediction combining WSI with RNA-seq data.</div>
+          <div class="project-links">
+            <a href="https://github.com" class="proj-link">↗ GitHub</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PUBLICATIONS -->
+  <section id="publications">
+    <div class="container">
+      <div class="section-label">Research</div>
+      <h2 class="section-title">Publications<span>.</span></h2>
+
+      <div class="pub-card">
+        <div class="pub-year">2022</div>
+        <div>
+          <div class="pub-title">Detection of Pneumonia and COVID-19 from Chest X-ray Images Using Neural Networks</div>
+          <div class="pub-venue">Evaluated CNN architectures achieving 94.25% accuracy for medical image classification.</div>
+          <a href="https://www.researchgate.net" class="pub-link">↗ ResearchGate</a>
+        </div>
+      </div>
+
+      <div class="pub-card">
+        <div class="pub-year">2022</div>
+        <div>
+          <div class="pub-title">Classification and Prediction of Lung Cancer</div>
+          <div class="pub-venue">Benchmarked CNN architectures on LC25000 dataset, achieving 90–99% accuracy.</div>
+          <a href="https://ieeexplore.ieee.org" class="pub-link">↗ IEEE</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="section-label">Connect</div>
+      <h2 class="section-title">Get in Touch<span>.</span></h2>
+      <div class="contact-grid">
+        <a href="tel:+19176405317" class="contact-card">
+          <div class="contact-icon">📞</div>
+          <div>
+            <div class="contact-lbl">Phone</div>
+            <div class="contact-val">+1 (917) 640-5317</div>
+          </div>
+        </a>
+        <a href="mailto:arvind.kurapati@gmail.com" class="contact-card">
+          <div class="contact-icon">✉️</div>
+          <div>
+            <div class="contact-lbl">Email</div>
+            <div class="contact-val">arvind.kurapati@gmail.com</div>
+          </div>
+        </a>
+        <a href="https://linkedin.com/in/aravind-kurapati" target="_blank" class="contact-card">
+          <div class="contact-icon">🔗</div>
+          <div>
+            <div class="contact-lbl">LinkedIn</div>
+            <div class="contact-val">aravind-kurapati</div>
+          </div>
+        </a>
+        <a href="https://medium.com" target="_blank" class="contact-card">
+          <div class="contact-icon">✍️</div>
+          <div>
+            <div class="contact-lbl">Blog</div>
+            <div class="contact-val">Medium</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2025 Kurapati Sreenivas Aravind</span>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/aravind-kurapati">LinkedIn</a>
+      <a href="https://medium.com">Blog</a>
+      <a href="mailto:arvind.kurapati@gmail.com">Email</a>
+    </div>
+  </footer>
+
 </body>
 </html>
