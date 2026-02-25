@@ -429,7 +429,7 @@
             <span class="project-tag">Ongoing</span>
           </div>
           <div class="project-title">FinSight: LLM-Powered SEC Filings Analysis</div>
-          <div class="project-desc">Full-stack RAG application for financial document Q&A using LLaMA 3.1 8B served via vLLM on dual GPUs. Optimized inference through batching and quantization — currently achieving 0.23s TTFT and 23.8 tokens/s throughput.</div>
+          <div class="project-desc">Built end to end RAG system over SEC 10-K filings using FAISS and BGE embeddings. Started on Kaggle T4 GPUs, hit vLLM/FlashInfer GPU incompatibilities, migrated to Modal's A10G GPU. Benchmarked LLaMA 3.1 8B vs Mistral 7B, with Mistral achieving 4.5x lower TTFT (1,015ms vs 4,616ms p50) at identical throughput (~29 tok/s)</div>
           <div class="project-links">
             <a href="https://github.com" class="proj-link">↗ GitHub</a>
             <a href="https://medium.com" class="proj-link">↗ Blog</a>
