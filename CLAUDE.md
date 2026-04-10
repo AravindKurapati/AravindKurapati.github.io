@@ -6,7 +6,7 @@ This is a static single-file portfolio site (`index.html`) deployed via GitHub P
 
 The working branch is `feat/portfolio-improvements`. All changes should be made on this branch. Do NOT commit to `main`.
 
-The `index.html` on this branch was partially updated in a previous session. **Before making any changes, verify the file is complete** — check that it ends with `</footer></body></html>`. If it is truncated, reconstruct the missing footer from the structure below.
+The `index.html` on this branch was partially updated in a previous session. **Before making any changes, verify the file is complete** - check that it ends with `</footer></body></html>`. If it is truncated, reconstruct the missing footer from the structure below.
 
 ### Expected footer structure
 ```html
@@ -26,7 +26,7 @@ The `index.html` on this branch was partially updated in a previous session. **B
 
 ## Stack
 
-- Pure HTML/CSS/JS — no build step, no framework, no npm
+- Pure HTML/CSS/JS - no build step, no framework, no npm
 - Single file: `index.html`
 - External: Google Fonts (Syne, DM Mono, DM Sans), `css/styles.css` (external sheet, mostly overridden by inline styles)
 - Deployed: GitHub Pages from `main` branch
@@ -55,13 +55,13 @@ Every project and publication currently has placeholder or generic links. Replac
 | Multi GPU HPC | `https://github.com/AravindKurapati` | `https://medium.com/@aravind.kurapati/when-100-cold-emails-and-850k-histopathology-tiles-changed-everything-bd8a4e9bbfbc` |
 | WSI Classification | `https://github.com/AravindKurapati` | none |
 
-Note: AlphaFold, FinSight, Multi GPU, WSI — the actual individual repos may not be public yet. Keep the links pointing to the profile root (`https://github.com/AravindKurapati`) until specific repo URLs are provided. Do NOT fabricate repo URLs.
+Note: AlphaFold, FinSight, Multi GPU, WSI - the actual individual repos may not be public yet. Keep the links pointing to the profile root (`https://github.com/AravindKurapati`) until specific repo URLs are provided. Do NOT fabricate repo URLs.
 
 **Publications:**
 | Paper | Real link |
 |---|---|
-| Pneumonia/COVID-19 detection | Keep `https://www.researchgate.net` for now — real DOI not provided |
-| Lung Cancer classification | Keep `https://ieeexplore.ieee.org` for now — real DOI not provided |
+| Pneumonia/COVID-19 detection | Keep `https://www.researchgate.net` for now - real DOI not provided |
+| Lung Cancer classification | Keep `https://ieeexplore.ieee.org` for now - real DOI not provided |
 
 Note: leave pub links as-is until real DOIs are provided. Do not change them.
 
@@ -99,10 +99,10 @@ Also update the existing `<title>` tag:
 Add `loading="lazy"` to all `<img>` tags **except** the hero profile image (that one should load eagerly).
 
 ```html
-<!-- hero — no lazy loading -->
+<!-- hero - no lazy loading -->
 <img src="assets/images/profile.jpeg" alt="Aravind" ...>
 
-<!-- all others — add loading="lazy" -->
+<!-- all others - add loading="lazy" -->
 <img src="assets/images/violin.jpg" alt="Violin" loading="lazy" ...>
 <img src="assets/images/place1.jpeg" alt="Paris" loading="lazy">
 <!-- etc -->
@@ -115,7 +115,7 @@ Requirements:
 - Hamburger button (☰) visible only on mobile (≤820px)
 - Clicking it toggles a dropdown nav below the navbar
 - Clicking a nav link closes the menu
-- No external libraries — pure CSS/JS only
+- No external libraries - pure CSS/JS only
 - Style consistent with existing nav (dark background, monospace font, same colors)
 
 Suggested implementation:
@@ -207,23 +207,15 @@ Add a "Download CV" button to the hero section, next to the existing CTA buttons
 <a href="assets/resume.pdf" download class="btn btn-outline">↓ Resume</a>
 ```
 
-Note: this assumes a file at `assets/resume.pdf`. If no PDF exists yet, add the button but set `href="#"` and add a `title="Coming soon"` attribute — do NOT fabricate or generate a PDF. The user will drop the file into `assets/` manually.
+Note: this assumes a file at `assets/resume.pdf`. If no PDF exists yet, add the button but set `href="#"` and add a `title="Coming soon"` attribute - do NOT fabricate or generate a PDF. The user will drop the file into `assets/` manually.
 
-### 10. Improve hero bio copy
-Replace the current generic bio:
-
-> "Technologist working on applying machine learning to solve problems. Background includes both research-oriented AI projects and enterprise software development. Seeking to work on initiatives with transformative potential and high scientific value."
-
-With something sharper — keep it honest but more specific:
-
-> "ML Engineer with a background in computer vision, LLM inference, and enterprise data pipelines. MS Computer Science from NYU. I build things that ship — from cancer detection models to system prompt trackers — and write about it on Medium."
 
 ---
 
 ## Design constraints
-- Keep the existing color palette and fonts — do not change CSS variables
-- Keep the single-file approach — do not split into multiple HTML files
-- Dark theme only — do not add a light mode toggle
+- Keep the existing color palette and fonts - do not change CSS variables
+- Keep the single-file approach - do not split into multiple HTML files
+- Dark theme only - do not add a light mode toggle
 - No new external JS libraries
 
 ## After all tasks are done
@@ -234,4 +226,4 @@ With something sharper — keep it honest but more specific:
   - Nav highlights update on scroll
   - All external links have `rel="noopener noreferrer"`
   - OG tags present in `<head>`
-- Commit with message: `feat: portfolio polish — mobile nav, OG tags, scroll-to-top, active nav, lazy images, bio update`
+- Commit with message: `feat: portfolio polish - mobile nav, OG tags, scroll-to-top, active nav, lazy images, bio update`
