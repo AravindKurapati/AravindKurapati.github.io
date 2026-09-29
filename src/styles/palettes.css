@@ -1,0 +1,28 @@
+/* Tile colours, taken from the hero photo: sky, platform yellow, signal red, coat slate.
+   A tile opts in with data-tone. Each tone redefines the ink variables it sits on,
+   so everything inside stays legible without per-component overrides. */
+:root {
+  --sky: #cfe0f1;
+  --platform: #f3d15c;
+  --signal: #c63a2e;
+  --slate: #3e4650;
+}
+
+[data-tone='sky'], [data-tone='now'], [data-tone='work-2'] {
+  --tile: var(--sky); --ink-3: #4a5360; --ink-4: #5f6b7a; --rule: rgba(20, 19, 18, 0.1);
+}
+
+[data-tone='platform'], [data-tone='edu'], [data-tone='work-1'] {
+  --tile: var(--platform); --ink-3: #4f4630; --ink-4: #6b5f3c; --rule: rgba(20, 19, 18, 0.12);
+}
+
+[data-tone='slate'], [data-tone='pubs'], [data-tone='work-3'] {
+  --tile: var(--slate);
+  --ink: #f7f5f1; --ink-2: #e6e3de; --ink-3: #c7c9cc; --ink-4: #a2a8ae; --rule: rgba(255, 255, 255, 0.15);
+}
+
+[data-tone='signal'], [data-tone='contact'] {
+  --tile: var(--signal);
+  --ink: #fff6f2; --ink-2: #fde8e2; --ink-3: #f7cfc5; --ink-4: #eeb3a6; --rule: rgba(255, 255, 255, 0.2);
+}
+[data-tone='signal'] .btn, [data-tone='contact'] .btn { background: #fff6f2; color: var(--signal); border-color: #fff6f2; }

@@ -1,0 +1,32 @@
+---
+// The afr command set, as documented in the agent-flight-recorder README.
+const cmds = [
+  ['afr ingest claude', 'parse ~/.claude sessions into the database'],
+  ['afr ingest codex', 'parse ~/.codex sessions'],
+  ['afr list --days 7', 'recent runs: goal, outcome, tokens'],
+  ['afr show <id>', 'every tool call, shell command, error, cost'],
+  ['afr search "modal"', 'full-text search across goals and summaries'],
+  ['afr errors', 'failed commands you keep hitting, with counts'],
+  ['afr tag <id> shipped', 'shipped, blocked, abandoned or exploratory'],
+  ['afr resume <id>', 'the exact command to reopen a session where it ran'],
+  ['afr extract-skills', 'draft a SKILL.md from sessions that shipped'],
+];
+---
+<figure class="fig term">
+  <figcaption class="bar"><span></span><span></span><span></span><em>afr --help</em></figcaption>
+  <dl>
+    {cmds.map(([c, d]) => (<div><dt>{c}</dt><dd>{d}</dd></div>))}
+  </dl>
+</figure>
+
+<style>
+  .term { margin: 22px 0 26px; background: #141312; color: #efe9df; border-radius: 14px; overflow: hidden; }
+  .bar { display: flex; gap: 6px; align-items: center; padding: 10px 14px; background: #24221f; }
+  .bar span { width: 10px; height: 10px; border-radius: 50%; background: #4a4640; }
+  .bar em { font-style: normal; font-family: var(--mono); font-size: 12px; color: #a9a298; margin-left: 8px; }
+  dl { margin: 0; padding: 14px 18px 16px; font-family: var(--mono); font-size: 13px; }
+  dl div { display: grid; grid-template-columns: minmax(170px, 38%) 1fr; gap: 14px; padding: 5px 0; }
+  dt { color: #f3d15c; }
+  dd { margin: 0; color: #cfc8bc; }
+  @media (max-width: 560px) { dl div { grid-template-columns: 1fr; gap: 2px; } }
+</style>

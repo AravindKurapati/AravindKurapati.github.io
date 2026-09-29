@@ -1,0 +1,148 @@
+---
+import { Picture } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import HeroNow from '../components/HeroNow.astro';
+import platform from '../assets/platform.jpeg';
+import { links, experience, education, publications, moreWork } from '../data/profile';
+
+const work = (await getCollection('work', (e) => !e.data.draft)).sort((a, b) => a.data.order - b.data.order);
+---
+<Base>
+  <section class="hero">
+    <div class="hero-left">
+      <div data-tone="intro" class="tile intro">
+        <p class="lbl">AI engineer · New York</p>
+        <h1>Aravind Kurapati</h1>
+        <p class="lede">Forward-deployed engineer at Virtusa, building AI systems for enterprise clients. NYU '25.</p>
+        <div class="btns">
+          <a class="btn" href={links.email}>Get in touch</a>
+          <a class="btn ghost" href={links.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </div>
+      <HeroNow />
+    </div>
+    <div class="photo">
+      <Picture
+        src={platform}
+        formats={['avif', 'webp']}
+        widths={[480, 720, 960, 1280]}
+        sizes="(min-width: 900px) 540px, 100vw"
+        alt="Aravind on an elevated subway platform with a B train behind him."
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+  </section>
+
+  <section class="section two">
+    <div data-tone="xp" class="tile">
+      <p class="lbl">Experience</p>
+      <ol class="xp">
+        {experience.map((x) => (
+          <li>
+            <div class="xp-head"><h3>{x.org}</h3><span class="meta">{x.when}</span></div>
+            <p class="role">{x.role}</p>
+            {x.lines.map((l) => <p class="muted">{l}</p>)}
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="stack">
+      <div data-tone="pubs" class="tile">
+        <p class="lbl">Publications</p>
+        <ul class="plain">
+          {publications.map((p) => (
+            <li class="list-row">
+              <span><a href={p.url} target="_blank" rel="noopener noreferrer">{p.title}</a><span class="muted"> · {p.note}</span></span>
+              <span class="meta">{p.venue} {p.year}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div data-tone="edu" class="tile">
+        <p class="lbl">Education</p>
+        <ul class="plain">
+          {education.map((e) => (
+            <li class="list-row"><span>{e.org}<span class="muted"> · {e.what}</span></span><span class="meta">{e.when}</span></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="work" class="section">
+    <p class="lbl sec-lbl">Selected work</p>
+    <div class="work-grid">
+      {work.map((w) => (
+        <a data-tone={`work-${w.data.order}`} class="tile work" href={`/work/${w.id}/`}>
+          <p class="lbl">{w.data.kind} · {w.data.year}</p>
+          <h2>{w.data.title}</h2>
+          <p class="result serif">{w.data.result.value}</p>
+          <p class="muted">{w.data.tagline}</p>
+          <span class="more">Read the write-up</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div data-tone="more" class="tile">
+        <p class="lbl">More work</p>
+        <ul class="plain">
+          {moreWork.map((m) => (
+            <li class="list-row">
+              <span>{m.url ? <a href={m.url} target={m.url.startsWith('http') ? '_blank' : undefined} rel={m.url.startsWith('http') ? 'noopener noreferrer' : undefined}>{m.name}</a> : m.name}<span class="muted"> · {m.what}</span></span>
+            </li>
+          ))}
+        </ul>
+      </div>
+  </section>
+
+  <section class="section">
+    <div data-tone="contact" class="tile contact">
+      <h2>Say hi.</h2>
+      <div class="btns"><a class="btn" href={links.email}>arvind.kurapati@gmail.com</a></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
+  @media (min-width: 900px) { .hero { grid-template-columns: 1fr 540px; } }
+  .hero-left { display: grid; gap: var(--gap); grid-template-rows: auto 1fr; }
+  .intro h1 { margin-top: 14px; }
+  .lede { font-size: 21px; line-height: 1.45; color: var(--ink-2); margin: 20px 0 26px; max-width: 34ch; }
+  .btns { display: flex; flex-wrap: wrap; gap: 10px; }
+  .photo :global(img) { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius); }
+  @media (min-width: 900px) { .hero-left :global(.loop) { aspect-ratio: auto; min-height: 280px; } }
+
+  .section { margin-top: 48px; }
+  .sec-lbl { margin: 0 6px 12px; }
+  .work-grid { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
+  @media (min-width: 900px) { .work-grid { grid-template-columns: repeat(3, 1fr); } }
+  .work { text-decoration: none; display: flex; flex-direction: column; gap: 10px; transition: transform 0.2s ease; }
+  .work:hover { transform: translateY(-2px); text-decoration: none; }
+  .work h2 { font-size: 34px; }
+  .result { font-size: 40px; line-height: 1; margin-top: 6px; }
+  .work .muted { font-size: 17px; }
+  .more { margin-top: auto; padding-top: 10px; font-family: var(--mono); font-size: 12px; text-decoration: underline; }
+
+  .two { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
+  @media (min-width: 900px) { .two { grid-template-columns: 1.1fr 1fr; align-items: start; } }
+  .xp { list-style: none; padding: 0; margin: 8px 0 0; }
+  .xp li { padding: 18px 0; border-bottom: 1px solid var(--rule); }
+  .xp li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .xp-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .xp h3 { font-size: 26px; }
+  .role { font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin: 4px 0 8px; }
+  .xp .muted { font-size: 17px; }
+  .meta { font-family: var(--mono); font-size: 12px; color: var(--ink-4); white-space: nowrap; }
+  .plain { list-style: none; padding: 0; margin: 6px 0 0; font-size: 17px; }
+
+  .now-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 0 6px 12px; }
+  .link { color: var(--ink); text-decoration: underline; }
+  .contact { text-align: left; }
+  .contact .btns { margin-top: 20px; }
+  .contact .muted { margin: 12px 0 22px; font-size: 19px; max-width: 46ch; }
+</style>

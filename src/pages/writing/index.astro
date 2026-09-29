@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { links } from '../../data/profile';
+
+const posts = (await getCollection('writing')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+---
+<Base title="Writing" description="Posts about agents, Claude Code, research and ML infrastructure.">
+  <div class="tile">
+    <p class="lbl">Writing</p>
+    <h1>Writing</h1>
+    <p class="lede">Written by me, not for me. The typos are how you can tell.</p>
+    <ul>
+      {posts.map((p) => (
+        <li class="list-row">
+          <a href={`/writing/${p.id}/`}>{p.data.title}</a>
+          <span class="meta">{fmt(p.data.date)}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="all"><a href="/rss.xml">RSS</a> · <a href={links.medium} target="_blank" rel="noopener noreferrer">Also on Medium</a></p>
+  </div>
+</Base>
+
+<style>
+  h1 { font-size: clamp(44px, 7vw, 66px); margin: 12px 0 10px; }
+  .lede { font-size: 20px; color: var(--ink-2); margin-bottom: 20px; }
+  ul { list-style: none; padding: 0; margin: 0; font-size: 19px; }
+  .all { margin-top: 20px; font-family: var(--mono); font-size: 12px; }
+</style>

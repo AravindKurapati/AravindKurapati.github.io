@@ -1,0 +1,45 @@
+---
+import now from '../data/now.json';
+import { longMonth, shortDate, stars, titleCase } from '../lib/format';
+
+const rows = [
+  now.films && { k: 'Watched', v: `${now.films.last[0].title}`, meta: stars(now.films.last[0].rating) },
+  now.books && { k: 'Read', v: now.books.last.title, meta: stars(now.books.last.rating) },
+  now.gym && { k: 'Gym', v: `${titleCase(now.gym.last.split)} day`, meta: shortDate(now.gym.last.date) },
+  now.steps && { k: 'Walking', v: `${now.steps.avg.toLocaleString('en-US')} steps a day`, meta: 'avg' },
+  now.place && { k: 'Favorite spot', v: now.place.name, meta: stars(now.place.rating) },
+].filter(Boolean) as { k: string; v: string; meta: string }[];
+---
+<div data-tone="now" class="tile hero-now">
+  <div class="head">
+    <p class="lbl">Right now · {longMonth(now.month)} · from my own trackers</p>
+    <a class="lbl link" href="/now/">More on the Now page</a>
+  </div>
+  <ul>
+    {rows.map((r) => (
+      <li>
+        <span class="k lbl">{r.k}</span>
+        <span class="v">{r.v}</span>
+        <span class="meta">{r.meta}</span>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .hero-now { display: flex; flex-direction: column; }
+  .head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .link { color: var(--ink); text-decoration: underline; }
+  ul { list-style: none; padding: 0; margin: 14px 0 0; }
+  li {
+    display: grid; grid-template-columns: 120px 1fr auto; gap: 14px; align-items: baseline;
+    padding: 9px 0; border-bottom: 1px solid var(--rule);
+  }
+  li:last-child { border-bottom: 0; }
+  .v { font-family: var(--serif); font-size: 24px; line-height: 1.1; }
+  .meta { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.08em; white-space: nowrap; }
+  @media (max-width: 520px) {
+    li { grid-template-columns: 1fr auto; }
+    .k { grid-column: 1 / -1; }
+  }
+</style>

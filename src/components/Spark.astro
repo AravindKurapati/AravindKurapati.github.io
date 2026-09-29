@@ -1,0 +1,29 @@
+---
+// Static SVG sparkline; no client JS.
+interface Props { data: number[]; label: string; left?: string; right?: string; }
+const { data, label, left = '', right = '' } = Astro.props;
+const w = 300, h = 56;
+const max = Math.max(...data, 1);
+const step = w / Math.max(data.length - 1, 1);
+const pts = data.map((v, i) => [i * step, h - (v / max) * (h - 8) + 4]);
+const line = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
+const last = pts[pts.length - 1];
+---
+<figure class="spark">
+  <svg viewBox={`0 0 ${w} 60`} preserveAspectRatio="none" role="img" aria-label={label}>
+    <path d={`${line} L ${w} 60 L 0 60 Z`} fill="rgba(20,19,18,0.06)" />
+    <path d={line} fill="none" stroke="var(--ink)" stroke-width="2" vector-effect="non-scaling-stroke" />
+  </svg>
+  <span class="dot" style={`left:calc(${(last[0] / w) * 100}% - 4px);top:${last[1] - 4}px`}></span>
+  <figcaption><span>{left}</span><span>{label}</span><span>{right}</span></figcaption>
+</figure>
+
+<style>
+  .spark { margin: 16px 0 0; position: relative; }
+  svg { width: 100%; height: 60px; display: block; }
+  .dot { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--ink); }
+  figcaption {
+    display: flex; justify-content: space-between; gap: 8px; margin-top: 4px;
+    font-family: var(--mono); font-size: 10px; color: var(--ink-4);
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+import Spark from './Spark.astro';
+import now from '../data/now.json';
+import { shortDate, monthLabel, stars, titleCase } from '../lib/format';
+
+interface Props { compact?: boolean; }
+const { compact = false } = Astro.props;
+const first = monthLabel(now.months[0], true);
+const lastM = monthLabel(now.months[now.months.length - 1]);
+const topMax = now.yt ? Math.max(...now.yt.topics.map((t) => t[1] as number)) : 1;
+const augGym = now.gym ? Math.max(...now.gym.by_month) : 0;
+const gymPeakIdx = now.gym ? now.gym.by_month.indexOf(augGym) : 0;
+---
+<div class="now-grid" data-compact={compact}>
+  {now.films && (
+    <article data-tone="platform" class="tile">
+      <p class="lbl">Films · last watched</p>
+      <h3 class="big">{now.films.last[0].title} <span class="muted small">({now.films.last[0].year})</span></h3>
+      <p class="stars" aria-label={`${now.films.last[0].rating} out of 5`}>{stars(now.films.last[0].rating)}</p>
+      {now.films.last[1] && <p class="muted">Before that: {now.films.last[1].title}, {stars(now.films.last[1].rating)}</p>}
+      <Spark data={now.films.by_month} label={`${now.films.total} films in 12 months`} left={first} right={lastM} />
+    </article>
+  )}
+  {now.books && (
+    <article data-tone="sky" class="tile">
+      <p class="lbl">Books · last finished</p>
+      <h3 class="big">{now.books.last.title}</h3>
+      <p class="stars" aria-label={`${now.books.last.rating} out of 5`}>{stars(now.books.last.rating)}</p>
+      <p class="muted">{now.books.last.pages} pages, {shortDate(now.books.last.started)} to {shortDate(now.books.last.finished)}</p>
+    </article>
+  )}
+  {now.gym && (
+    <article data-tone="slate" class="tile">
+      <p class="lbl">Gym · last session</p>
+      <h3 class="big">{titleCase(now.gym.last.split)}, {shortDate(now.gym.last.date)}</h3>
+      <p class="muted">Push, pull, legs split.</p>
+      <Spark data={now.gym.by_month} label={`${augGym} sessions in ${monthLabel(now.months[gymPeakIdx])}`} left={first} right={lastM} />
+    </article>
+  )}
+  {!compact && now.yt && (
+    <article class="tile">
+      <p class="lbl">YouTube · topics this month</p>
+      <ul class="bars">
+        {now.yt.topics.map(([t, n]) => (
+          <li><span>{t}</span><span class="bar" style={`width:${((n as number) / topMax) * 100}%`}></span><span class="n">{n}</span></li>
+        ))}
+      </ul>
+    </article>
+  )}
+  {!compact && now.steps && (
+    <article class="tile">
+      <p class="lbl">Walking · steps per day</p>
+      <h3 class="big">{now.steps.avg.toLocaleString('en-US')}</h3>
+      <p class="muted">{monthLabel(now.month)} average</p>
+      <Spark data={now.steps.by_month} label={`peak: ${monthLabel(now.steps.peak.month)}, ${now.steps.peak.avg.toLocaleString('en-US')}`} left={first} right={lastM} />
+    </article>
+  )}
+  {!compact && now.sleep && (
+    <article data-tone="sky" class="tile">
+      <p class="lbl">Sleep · average night</p>
+      <h3 class="big">{now.sleep.avg_hours}h</h3>
+      <p class="muted">over the last 90 days</p>
+      <Spark data={now.sleep.by_month} label="hours / night by month" left={first} right={lastM} />
+    </article>
+  )}
+  {!compact && now.meals && (
+    <article data-tone="platform" class="tile">
+      <p class="lbl">Meals · food diary</p>
+      <h3 class="big">{now.meals.count} logged</h3>
+      <p class="muted">in {monthLabel(now.month)}, in my own meal diary</p>
+      <Spark data={now.meals.by_month} label="meals logged / month" left={first} right={lastM} />
+    </article>
+  )}
+  {!compact && now.place && (
+    <article data-tone="signal" class="tile">
+      <p class="lbl">Places · a favorite</p>
+      <h3 class="big">{now.place.name}</h3>
+      <p class="stars">{stars(now.place.rating)} <span class="muted meta">{now.place.area} · {now.place.badge}</span></p>
+      <blockquote>"{now.place.quote}"</blockquote>
+      <a class="lbl link" href={now.place.url} target="_blank" rel="noopener noreferrer">Read the review</a>
+    </article>
+  )}
+</div>
+
+<style>
+  .now-grid { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .now-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .now-grid { grid-template-columns: repeat(3, 1fr); } }
+  .big { font-size: 34px; line-height: 1.05; margin: 12px 0 4px; }
+  .small { font-size: 20px; }
+  .stars { font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .meta { font-family: var(--body); letter-spacing: 0; font-size: 15px; }
+  .muted { font-size: 16px; }
+  blockquote { margin: 12px 0 0; font-style: italic; color: var(--ink-3); font-size: 16px; line-height: 1.45; }
+  .link { display: inline-block; margin-top: 12px; color: var(--ink); text-decoration: underline; }
+  .bars { list-style: none; padding: 0; margin: 12px 0 0; }
+  .bars li { display: grid; grid-template-columns: 90px 1fr 28px; gap: 10px; align-items: center; font-size: 15px; margin: 8px 0; }
+  .bar { height: 8px; background: var(--ink); border-radius: 4px; }
+  .n { font-family: var(--mono); font-size: 12px; text-align: right; }
+</style>

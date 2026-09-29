@@ -1,0 +1,33 @@
+---
+// Where the insulin alignment came from (numbers from the alphafold-prediction README run logs).
+const bars = [
+  { k: 'UniRef90', v: 675 },
+  { k: 'BFD', v: 372 },
+  { k: 'MGnify', v: 9 },
+];
+const max = 1056;
+---
+<figure class="fig">
+  <figcaption class="lbl">Sequence hits per database, before deduplication</figcaption>
+  <ul>
+    {bars.map((b) => (
+      <li title={`${b.k}: ${b.v} sequences`}>
+        <span class="k">{b.k}</span>
+        <span class="track"><span class="bar" style={`width:${Math.max(0.6, (b.v / max) * 100)}%`}></span></span>
+        <span class="v">{b.v}</span>
+      </li>
+    ))}
+  </ul>
+  <p class="note">Merged and deduplicated into a 981-sequence alignment, plus 20 structural templates from the PDB.</p>
+</figure>
+
+<style>
+  .fig { margin: 22px 0 26px; }
+  ul { list-style: none; padding: 0; margin: 12px 0 0; }
+  li { display: grid; grid-template-columns: 90px 1fr 48px; gap: 12px; align-items: center; padding: 7px 0; }
+  .k { font-family: var(--mono); font-size: 13px; color: var(--ink-2); }
+  .track { height: 14px; }
+  .bar { display: block; height: 100%; background: var(--slate); border-radius: 0 4px 4px 0; }
+  .v { font-family: var(--mono); font-size: 13px; text-align: right; }
+  .note { font-size: 14px !important; color: var(--ink-3) !important; margin-top: 10px !important; }
+</style>

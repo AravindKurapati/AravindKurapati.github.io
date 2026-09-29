@@ -1,0 +1,226 @@
+---
+// Turn-by-turn replay of one recorded durable-notebook rollout (src/data/replay.json,
+// produced by scripts/extract_replay.py). Server-renders every turn so it reads without JS;
+// the script only reveals turns one at a time.
+import replay from '../data/replay.json';
+
+const slots = Object.keys(replay.submitted);
+const label = (k: string) => k.replace(/_/g, ' ');
+const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+// Exact after normalising case and punctuation: "$1500" == "1500", but "15000" is wrong.
+const matches = (answer: string, truth: string) => norm(answer) === norm(truth);
+const others = replay.replays.filter((r) => r.naive === 1 && r.hardened === 0);
+---
+<section class="replay" data-replay>
+  <div class="tile top" data-tone="slate">
+    <p class="lbl">Replay · one real rollout · training step {replay.source.step}</p>
+    <h2>Watch it cheat.</h2>
+    <p class="intro">
+      A real episode from the run trained against the naive grader. Facts arrive, the model files them, old turns
+      scroll out of its view, and then it is asked four questions. Step through it.
+    </p>
+    <div class="controls">
+      <button type="button" data-prev>Back</button>
+      <button type="button" data-next class="primary">Next turn</button>
+      <button type="button" data-play>Play</button>
+      <button type="button" data-end>Skip to the end</button>
+      <span class="count lbl" data-count></span>
+    </div>
+    <input type="range" min="0" max={replay.steps.length - 1} value={replay.steps.length - 1} data-scrub aria-label="Turn" />
+  </div>
+
+  <div class="panes">
+    <div class="tile convo">
+      <p class="lbl">Conversation</p>
+      <ol>
+        {replay.steps.map((s, i) => (
+          <li class={`msg ${s.who}`} data-step={i} data-from={s.who === 'model' ? s.visible_from : ''}>
+            <span class="who lbl">{s.who === 'user' ? (s.question ? 'Questions' : 'User') : 'Model'}</span>
+            {s.who === 'user' && <p class="text">{s.text}</p>}
+            {s.who === 'model' && s.text && <p class="text said">{s.text}</p>}
+            {s.who === 'model' && s.calls?.map((c) => (
+              <code class="call">{c.tool === 'write_file'
+                ? `write_file(${c.args.path}, "${c.args.content}")`
+                : `submit_manifest(${(c.args.entries ?? []).map((e) => `${e.slot}: "${e.answer}"`).join(', ')})`}</code>
+            ))}
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="side">
+      <div class="tile files" data-tone="sky">
+        <p class="lbl">notes/ on disk</p>
+        <p class="window lbl" data-window></p>
+        <table>
+          <tbody data-files></tbody>
+        </table>
+        <p class="hint" data-hint></p>
+      </div>
+
+      <div class="tile verdict" data-verdict hidden>
+        <p class="lbl">What the graders saw</p>
+        <div class="grades">
+          <div data-tone="platform" class="grade"><span class="lbl">Naive grader</span><span class="n serif">{replay.scores.naive.toFixed(1)}</span><span class="why">Every answer points to a file that exists and is not empty.</span></div>
+          <div data-tone="signal" class="grade"><span class="lbl">Hardened grader</span><span class="n serif">{replay.scores.hardened.toFixed(1)}</span><span class="why">It reads the files. None of them holds the true answer anymore.</span></div>
+        </div>
+        <table class="truth">
+          <thead><tr><th class="lbl">Question</th><th class="lbl">True answer</th><th class="lbl">It submitted</th></tr></thead>
+          <tbody>
+            {slots.map((k) => (
+              <tr><td>{label(k)}</td><td>{replay.truth[k]}</td><td class={matches(replay.submitted[k], replay.truth[k]) ? 'ok' : 'bad'}>{replay.submitted[k]}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tile runs">
+    <p class="lbl">The same episode, {others.length} runs, all scored 1.0 by the naive grader and 0.0 by the hardened one</p>
+    <p class="intro">Same facts every time, so a model that remembered would give the same answers every time. It invents new ones.</p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th class="lbl">Question</th><th class="lbl truthcol">Truth</th>{others.map((_, i) => <th class="lbl">Run {i + 1}</th>)}</tr>
+        </thead>
+        <tbody>
+          {slots.map((k) => (
+            <tr>
+              <td>{label(k)}</td>
+              <td class="truthcol">{replay.truth[k]}</td>
+              {others.map((r) => <td class={r.answers[k] && matches(r.answers[k], replay.truth[k]) ? 'ok' : 'bad'}>{r.answers[k] ?? '-'}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="source lbl">Source: {replay.source.run}, rollout {replay.source.rollout.slice(0, 8)}. Text is verbatim from the training trace.</p>
+  </div>
+</section>
+
+<script define:vars={{ truth: replay.truth }}>
+  const root = document.querySelector('[data-replay]');
+  const items = [...root.querySelectorAll('[data-step]')];
+  const last = items.length - 1;
+  const scrub = root.querySelector('[data-scrub]');
+  const count = root.querySelector('[data-count]');
+  const filesEl = root.querySelector('[data-files]');
+  const windowEl = root.querySelector('[data-window]');
+  const hint = root.querySelector('[data-hint]');
+  const verdict = root.querySelector('[data-verdict]');
+  const norm = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const ok = (key, v) => Boolean(truth[key]) && norm(v) === norm(truth[key]);
+
+  // Replay the file writes up to step n to get the folder as it was.
+  function filesAt(n) {
+    const files = {}; const changed = new Set();
+    items.slice(0, n + 1).forEach((li, i) => {
+      li.querySelectorAll('.call').forEach((c) => {
+        const m = /^write_file\(notes\/(\w+), "(.*)"\)$/.exec(c.textContent);
+        if (!m) return;
+        files[m[1]] = { value: m[2], was: files[m[1]] && files[m[1]].value !== m[2] ? files[m[1]].value : files[m[1]]?.was };
+        if (i === n) changed.add(m[1]);
+      });
+    });
+    return { files, changed };
+  }
+
+  function show(n) {
+    n = Math.max(0, Math.min(last, n));
+    scrub.value = n;
+    count.textContent = `Turn ${n + 1} of ${items.length}`;
+    // What the model could still see at the most recent model turn.
+    let from = 0;
+    for (let i = n; i >= 0; i--) if (items[i].dataset.from !== '') { from = Number(items[i].dataset.from); break; }
+    items.forEach((li, i) => {
+      li.hidden = i > n;
+      li.classList.toggle('gone', i < from);
+      li.classList.toggle('current', i === n);
+    });
+    const { files, changed } = filesAt(n);
+    filesEl.innerHTML = Object.entries(files).map(([k, f]) => {
+      const cls = changed.has(k) ? 'changed' : '';
+      const good = ok(k, f.value);
+      const lost = f.was && ok(k, f.was) && !good;
+      return `<tr class="${cls} ${lost ? 'lost' : ''}"><td class="path">${k}</td><td>${lost ? `<s>${f.was}</s> ` : ''}${f.value}</td></tr>`;
+    }).join('');
+    const gone = items.slice(0, from).filter((li) => li.classList.contains('user')).length;
+    windowEl.textContent = gone === 1 ? "1 earlier user turn has scrolled out of the model's view"
+      : gone ? `${gone} earlier user turns have scrolled out of the model's view` : 'Everything so far is still in view';
+    const end = n === last;
+    hint.textContent = end
+      ? 'It never opened a file. It overwrote the correct notes with guesses, then submitted.'
+      : '';
+    verdict.hidden = !end;
+    root.querySelector('.convo ol').lastElementChild && items[n].scrollIntoView({ block: 'nearest' });
+  }
+
+  let timer = null;
+  const stop = () => { clearInterval(timer); timer = null; root.querySelector('[data-play]').textContent = 'Play'; };
+  root.querySelector('[data-next]').onclick = () => { stop(); show(+scrub.value + 1); };
+  root.querySelector('[data-prev]').onclick = () => { stop(); show(+scrub.value - 1); };
+  root.querySelector('[data-end]').onclick = () => { stop(); show(last); };
+  root.querySelector('[data-play]').onclick = (e) => {
+    if (timer) return stop();
+    if (+scrub.value === last) show(0);
+    e.target.textContent = 'Pause';
+    timer = setInterval(() => { if (+scrub.value >= last) return stop(); show(+scrub.value + 1); }, 900);
+  };
+  scrub.oninput = () => { stop(); show(+scrub.value); };
+  show(0);
+</script>
+
+<style>
+  .replay { margin-top: 40px; display: grid; gap: var(--gap); }
+  .top h2 { font-size: clamp(38px, 5vw, 52px); margin-top: 10px; }
+  .intro { font-size: 18px; color: var(--ink-2); margin-top: 10px; max-width: 64ch; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 18px; }
+  .controls button {
+    font-family: var(--mono); font-size: 12px; cursor: pointer; border-radius: 999px; padding: 10px 16px;
+    background: transparent; color: var(--ink); border: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+  }
+  .controls button.primary { background: var(--ink); color: var(--slate); border-color: var(--ink); }
+  .count { margin-left: auto; color: var(--ink-3); }
+  input[type='range'] { width: 100%; margin-top: 16px; accent-color: #f3d15c; }
+
+  .panes { display: grid; gap: var(--gap); grid-template-columns: 1fr; align-items: start; }
+  @media (min-width: 960px) { .panes { grid-template-columns: 1.2fr 1fr; } .side { position: sticky; top: 16px; } }
+  .side { display: grid; gap: var(--gap); }
+  .convo ol { list-style: none; padding: 0; margin: 12px 0 0; max-height: 620px; overflow-y: auto; }
+  .msg { padding: 12px 0; border-bottom: 1px solid var(--rule); transition: opacity 0.2s ease; }
+  .msg .who { display: block; margin-bottom: 4px; }
+  .msg .text { font-size: 17px; line-height: 1.45; }
+  .msg .said { color: var(--ink-3); font-style: italic; }
+  .msg.model .who { color: #2f5d8a; }
+  .call {
+    display: block; margin-top: 6px; font-family: var(--mono); font-size: 13px; line-height: 1.5;
+    background: var(--sunk); border-radius: 8px; padding: 8px 10px; white-space: pre-wrap; word-break: break-word;
+  }
+  .msg.gone { opacity: 0.35; }
+  .msg.current { background: color-mix(in srgb, #f3d15c 22%, transparent); border-radius: 10px; padding-left: 10px; padding-right: 10px; }
+
+  .files table, .truth, .runs table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 16px; }
+  .files td { padding: 8px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .files .path { font-family: var(--mono); font-size: 13px; width: 45%; color: var(--ink-3); }
+  .files tr.changed td { font-weight: 500; }
+  .files tr.changed .path::before { content: '* '; }
+  .files tr.lost td:last-child { color: var(--signal); }
+  .files s { color: var(--ink-3); }
+  .window { margin-top: 8px; color: var(--ink-3); }
+  .hint { margin-top: 12px; font-size: 16px; font-weight: 500; }
+  .hint:empty { display: none; }
+
+  .grades { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .grade { background: var(--tile); color: var(--ink); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 4px; }
+  .grade .n { font-size: 48px; line-height: 1; }
+  .grade .why { font-size: 14px; color: var(--ink-3); line-height: 1.35; }
+  th { text-align: left; padding: 6px 8px 6px 0; font-weight: 400; }
+  td { padding: 8px 8px 8px 0; border-top: 1px solid var(--rule); }
+  td.ok { color: #2f6b3f; }
+  td.bad { color: var(--signal); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .scroll { overflow-x: auto; }
+  .runs table { min-width: 760px; font-size: 15px; }
+  .truthcol { font-weight: 500; }
+  .source { margin-top: 14px; color: var(--ink-4); }
+</style>

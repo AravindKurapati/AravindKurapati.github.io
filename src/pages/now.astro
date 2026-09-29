@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import NowTiles from '../components/NowTiles.astro';
+import now from '../data/now.json';
+import { longMonth } from '../lib/format';
+---
+<Base title="Now" description="What I'm up to outside work, updated monthly from my own trackers.">
+  <div class="tile head">
+    <p class="lbl">Now · {longMonth(now.month)} · updated monthly from my own trackers</p>
+    <h1>What I'm up to, outside work.</h1>
+  </div>
+  <NowTiles />
+  <div data-tone="slate" class="tile how">
+    <p class="lbl">How this page works</p>
+    <p class="muted">I built a few simple tools to automatically track my reading, movies, workouts, and daily walks. Once a month, my laptop compiles everything into a single file to update this page.</p>
+  </div>
+</Base>
+
+<style>
+  .head { margin-bottom: var(--gap); }
+  .head h1 { font-size: clamp(44px, 7vw, 66px); margin-top: 12px; }
+  .how { margin-top: var(--gap); }
+  .how .muted { font-size: 17px; max-width: 70ch; }
+</style>

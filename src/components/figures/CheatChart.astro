@@ -1,0 +1,116 @@
+---
+// Cheat rate per training step for both runs (src/data/cheat-rate.json, from durable-notebook's
+// eval/regrade_results). Faint dots = each step; line = 10-step rollout-weighted average.
+import data from '../../data/cheat-rate.json';
+
+const W = 640, H = 300, L = 44, R = 128, T = 16, B = 34;
+const YMAX = 70;
+const x = (s: number) => L + ((s - 1) / 59) * (W - L - R);
+const y = (pct: number) => T + (1 - pct / YMAX) * (H - T - B);
+type Row = [number, number, number];
+const series = [
+  { key: 'stage1', name: 'Trained vs naive grader', color: '#c63a2e', rows: data.stage1 as Row[] },
+  { key: 'stage2', name: 'Trained vs hardened grader', color: '#2a63b8', rows: data.stage2 as Row[] },
+];
+const rolling = (rows: Row[]) => rows.map((_, i) => {
+  const win = rows.slice(Math.max(0, i - 9), i + 1);
+  return (100 * win.reduce((a, r) => a + r[1], 0)) / win.reduce((a, r) => a + r[2], 0);
+});
+const lines = series.map((s) => {
+  const r = rolling(s.rows);
+  return { ...s, roll: r, d: r.map((v, i) => `${i ? 'L' : 'M'}${x(s.rows[i][0]).toFixed(1)} ${y(v).toFixed(1)}`).join(' ') };
+});
+const steps = data.stage1.map((r, i) => ({
+  step: r[0],
+  a: (100 * r[1]) / r[2], an: r[2],
+  b: (100 * data.stage2[i][1]) / data.stage2[i][2], bn: data.stage2[i][2],
+}));
+---
+<figure class="fig" data-cheat>
+  <figcaption>
+    <span class="lbl">Cheat rate by training step</span>
+    <span class="legend">
+      {series.map((s) => <span><i style={`background:${s.color}`}></i>{s.name}</span>)}
+    </span>
+  </figcaption>
+  <div class="plot">
+    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Cheat rate per training step. Trained against the naive grader it climbs to about 40 to 60 percent; trained against the hardened grader it stays near 10 percent.">
+      {[0, 20, 40, 60].map((v) => (
+        <g>
+          <line x1={L} x2={W - R} y1={y(v)} y2={y(v)} class="grid" />
+          <text x={L - 8} y={y(v) + 4} text-anchor="end" class="tick">{v}%</text>
+        </g>
+      ))}
+      {[1, 20, 40, 60].map((s) => <text x={x(s)} y={H - 10} text-anchor="middle" class="tick">{s === 1 ? 'step 1' : s}</text>)}
+      {lines.map((s) => s.rows.map((r) => <circle cx={x(r[0])} cy={y((100 * r[1]) / r[2])} r="2.6" fill={s.color} opacity="0.28" />))}
+      {lines.map((s) => <path d={s.d} fill="none" stroke={s.color} stroke-width="2" stroke-linejoin="round" />)}
+      {lines.map((s) => (
+        <text x={W - R + 8} y={y(s.roll[s.roll.length - 1]) + 4} class="end">{s.key === 'stage1' ? 'vs naive' : 'vs hardened'}</text>
+      ))}
+      <line class="cross" x1="0" x2="0" y1={T} y2={H - B} data-cross />
+      {steps.map((st) => (
+        <rect class="hit" x={x(st.step) - (W - L - R) / 118} width={(W - L - R) / 59} y={T} height={H - T - B}
+          data-tip={`Step ${st.step}|${st.a.toFixed(0)}% of ${st.an} rollouts|${st.b.toFixed(0)}% of ${st.bn} rollouts`} data-x={x(st.step)} />
+      ))}
+    </svg>
+    <div class="tip" data-tip-box hidden></div>
+  </div>
+  <p class="note">Dots are single steps (15 to 64 rollouts each, so they are noisy). Lines are the 10-step average, weighted by rollouts. A rollout counts as cheating when the naive grader gives it at least 0.75 and the hardened grader at most 0.25.</p>
+  <details>
+    <summary class="lbl">Show the numbers</summary>
+    <div class="table">
+      <table>
+        <thead><tr><th>Step</th><th>Vs naive</th><th>Vs hardened</th></tr></thead>
+        <tbody>{steps.map((st) => <tr><td>{st.step}</td><td>{st.a.toFixed(1)}% (n={st.an})</td><td>{st.b.toFixed(1)}% (n={st.bn})</td></tr>)}</tbody>
+      </table>
+    </div>
+  </details>
+</figure>
+
+<script>
+  for (const fig of document.querySelectorAll('[data-cheat]')) {
+    const box = fig.querySelector('[data-tip-box]') as HTMLElement;
+    const cross = fig.querySelector('[data-cross]') as SVGLineElement;
+    const svg = fig.querySelector('svg')!;
+    fig.querySelectorAll<SVGRectElement>('.hit').forEach((r) => {
+      r.addEventListener('pointerenter', () => {
+        const [step, a, b] = r.dataset.tip!.split('|');
+        box.innerHTML = `<b>${step}</b><span><i class="a"></i>Vs naive: ${a}</span><span><i class="b"></i>Vs hardened: ${b}</span>`;
+        box.hidden = false;
+        const px = (Number(r.dataset.x) / 640) * svg.clientWidth;
+        box.style.left = `${Math.min(px + 12, svg.clientWidth - 230)}px`;
+        cross.setAttribute('x1', r.dataset.x!); cross.setAttribute('x2', r.dataset.x!);
+        cross.style.opacity = '1';
+      });
+    });
+    svg.addEventListener('pointerleave', () => { box.hidden = true; cross.style.opacity = '0'; });
+  }
+</script>
+
+<style>
+  .fig { margin: 22px 0 26px; }
+  figcaption { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--ink-2); }
+  .legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+  .plot { position: relative; margin-top: 10px; }
+  svg { width: 100%; height: auto; display: block; }
+  .grid { stroke: var(--rule); stroke-width: 1; }
+  .tick { font-family: var(--mono); font-size: 11px; fill: var(--ink-4); }
+  .end { font-family: var(--mono); font-size: 12px; fill: var(--ink-2); }
+  .cross { stroke: var(--ink-4); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0; }
+  .hit { fill: transparent; cursor: crosshair; }
+  .tip[hidden] { display: none; }
+  .tip {
+    position: absolute; top: 8px; min-width: 200px; background: var(--ink); color: #fff; border-radius: 10px;
+    padding: 10px 12px; font-size: 13px; display: flex; flex-direction: column; gap: 4px; pointer-events: none;
+  }
+  .tip :global(i) { display: inline-block; width: 10px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+  .tip :global(i.a) { background: #e0695d; }
+  .tip :global(i.b) { background: #7ea6e6; }
+  .note { font-size: 14px !important; color: var(--ink-3) !important; margin-top: 10px !important; line-height: 1.5 !important; }
+  details { margin-top: 6px; }
+  summary { cursor: pointer; }
+  .table { max-height: 260px; overflow-y: auto; margin-top: 8px; }
+  table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; }
+  th, td { text-align: left; padding: 4px 8px 4px 0; border-bottom: 1px solid var(--rule); font-weight: 400; }
+</style>

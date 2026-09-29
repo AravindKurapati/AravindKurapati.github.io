@@ -1,0 +1,81 @@
+---
+import Base from '../layouts/Base.astro';
+
+const swatches = [
+  { name: 'Sky', hex: '#cfe0f1', tone: 'sky' },
+  { name: 'Platform yellow', hex: '#f3d15c', tone: 'platform' },
+  { name: 'Coat slate', hex: '#3e4650', tone: 'slate' },
+  { name: 'Signal red', hex: '#c63a2e', tone: 'signal' },
+];
+const never = ['Coordinates or anywhere I stopped', 'Money', 'Screen time', 'YouTube titles, channels or video ids', 'Gym weights or which gym', 'Raw logs of any kind'];
+---
+<Base title="Colophon" description="How this site is built: Astro, a monthly tracker pipeline, and what never leaves my laptop.">
+  <div class="tile head">
+    <p class="lbl">Colophon</p>
+    <h1>How this site is built.</h1>
+  </div>
+
+  <div class="grid two">
+    <section class="tile">
+      <p class="lbl">Stack</p>
+      <ul class="plain">
+        <li class="list-row"><span>Astro, static output</span><span class="meta">no server</span></li>
+        <li class="list-row"><span>GitHub Pages, deployed by a GitHub Action</span><span class="meta">on push</span></li>
+        <li class="list-row"><span>Hand-written CSS</span><span class="meta">no framework</span></li>
+        <li class="list-row"><span>Instrument Serif, Newsreader, JetBrains Mono</span><span class="meta">type</span></li>
+        <li class="list-row"><span>Share cards rendered with Playwright</span><span class="meta">one per page</span></li>
+        <li class="list-row"><span>No analytics, cookies or trackers</span><span class="meta">none</span></li>
+      </ul>
+    </section>
+
+    <section class="tile">
+      <p class="lbl">Colours, taken from the photo on the home page</p>
+      <div class="swatches">
+        {swatches.map((s) => (
+          <div data-tone={s.tone} class="swatch"><span class="serif">{s.name}</span><span class="lbl">{s.hex}</span></div>
+        ))}
+      </div>
+    </section>
+  </div>
+
+  <section data-tone="sky" class="tile pipe">
+    <p class="lbl">The Now page</p>
+    <h2>Eleven small trackers, one monthly file.</h2>
+    <ol class="steps">
+      <li><b>Trackers.</b> Each is a CLI I wrote for one thing: library loans and reading, Letterboxd and films, gym sessions, walks from my phone, sleep, meals, YouTube history.</li>
+      <li><b>Collect.</b> Once a month a hub runs every tracker's export into one folder, in a shared event format.</li>
+      <li><b>Export.</b> A single command builds <code>now.json</code> from the last twelve months. It is an allowlist: a field reaches the site only if the exporter names it.</li>
+      <li><b>Check.</b> The exporter refuses to write, and the site's tests refuse to build, if anything looks like a coordinate, a video id or an amount of money.</li>
+      <li><b>Publish.</b> I read the diff, then push. The site reads the file at build time; nothing is fetched live.</li>
+    </ol>
+  </section>
+
+  <div class="grid two">
+    <section data-tone="signal" class="tile">
+      <p class="lbl">Never leaves my laptop</p>
+      <ul class="plain never">{never.map((n) => <li class="list-row">{n}</li>)}</ul>
+    </section>
+    <section data-tone="platform" class="tile">
+      <p class="lbl">Real data only</p>
+      <p class="body">The replay on the durable-notebook page is one rollout copied verbatim from a training trace, with the files it wrote and what was still in its context window at each turn. The charts are drawn from the same re-graded results the project reports. Nothing on the work pages is a mock-up.</p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .head { margin-bottom: var(--gap); }
+  .head h1 { font-size: clamp(44px, 7vw, 66px); margin-top: 12px; }
+  .grid.two { grid-template-columns: 1fr; margin-bottom: var(--gap); }
+  @media (min-width: 900px) { .grid.two { grid-template-columns: 1fr 1fr; } }
+  .plain { list-style: none; padding: 0; margin: 10px 0 0; font-size: 17px; }
+  .swatches { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .swatch { background: var(--tile); color: var(--ink); border-radius: 14px; padding: 16px; min-height: 96px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(0,0,0,.06); }
+  .swatch .serif { font-size: 24px; }
+  .pipe { margin-bottom: var(--gap); }
+  .pipe h2 { margin-top: 10px; }
+  .steps { margin: 16px 0 0; padding-left: 22px; font-size: 18px; line-height: 1.55; max-width: 76ch; }
+  .steps li { margin: 8px 0; }
+  code { font-family: var(--mono); font-size: 0.85em; background: color-mix(in srgb, var(--ink) 8%, transparent); padding: 1px 6px; border-radius: 4px; }
+  .body { font-size: 18px; line-height: 1.55; margin-top: 10px; }
+  .never { font-size: 17px; }
+</style>

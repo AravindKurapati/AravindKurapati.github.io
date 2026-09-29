@@ -1,0 +1,91 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { letterboxd, topFour, europe, edits } from '../data/afterhours';
+
+const tones = ['platform', 'sky', 'slate', 'signal'];
+const countries = new Set(europe.map((e) => e.country)).size;
+---
+<Base title="After hours" description="Films, a month in Europe, and the edits I make when I'm not working.">
+  <div class="tile head">
+    <p class="lbl">After hours</p>
+    <h1>What I'm like when the laptop closes.</h1>
+  </div>
+
+  <section class="section">
+    <div class="sec-head">
+      <p class="lbl">Films · my Letterboxd top four</p>
+      <a class="lbl link" href={letterboxd} target="_blank" rel="noopener noreferrer">More on Letterboxd</a>
+    </div>
+    <div class="films">
+      {topFour.map((f, i) => (
+        <a data-tone={tones[i]} class="tile film" href={f.url} target="_blank" rel="noopener noreferrer">
+          <span class="rank serif">{i + 1}</span>
+          <span class="title serif">{f.title}</span>
+          <span class="year lbl">{f.year}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-head">
+      <p class="lbl">Europe · summer 2024 · 30 days, {countries} countries</p>
+    </div>
+    <div class="photos">
+      {europe.map((e) => (
+        <figure class="tile photo">
+          <Picture src={e.img} formats={['avif', 'webp']} widths={[400, 640, 960]} sizes="(min-width: 1000px) 400px, (min-width: 640px) 50vw, 100vw" alt={e.alt} />
+          <figcaption><span class="serif place">{e.place}</span><span class="lbl">{e.country}</span></figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+
+  {edits.length > 0 && (
+    <section class="section">
+      <div class="sec-head"><p class="lbl">Edits · short-form, cut on my phone</p></div>
+      <div class="edits">
+        {edits.map((v) => (
+          <figure class="tile clip">
+            <video src={v.src} poster={v.poster} muted loop playsinline preload="none" controls aria-label={v.title}></video>
+            <figcaption class="lbl">{v.title}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .head h1 { font-size: clamp(44px, 7vw, 66px); margin-top: 12px; }
+  .lede { font-size: 21px; color: var(--ink-2); margin-top: 14px; max-width: 48ch; }
+  .section { margin-top: 40px; }
+  .sec-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 0 6px 12px; }
+  .link { color: var(--ink); text-decoration: underline; }
+
+  .films { display: grid; gap: var(--gap); grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 900px) { .films { grid-template-columns: repeat(4, 1fr); } }
+  .film {
+    aspect-ratio: 2 / 3; display: flex; flex-direction: column; justify-content: space-between;
+    text-decoration: none; transition: transform 0.2s ease;
+  }
+  .film:hover { transform: translateY(-3px); text-decoration: none; }
+  .rank { font-size: 64px; line-height: 0.8; opacity: 0.35; }
+  .title { font-size: clamp(26px, 3vw, 36px); line-height: 1.02; margin-top: auto; }
+  .year { margin-top: 10px; color: var(--ink-3); }
+
+  /* Masonry by columns so every photo keeps its own shape. */
+  .photos { columns: 1; column-gap: var(--gap); }
+  @media (min-width: 640px) { .photos { columns: 2; } }
+  @media (min-width: 1000px) { .photos { columns: 3; } }
+  .photo { break-inside: avoid; margin: 0 0 var(--gap); padding: 10px 10px 14px; }
+  .photo :global(img) { width: 100%; height: auto; border-radius: 14px; }
+  figcaption { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 6px 0; }
+  .place { font-size: 24px; }
+
+  .edits { display: grid; gap: var(--gap); grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .clip { padding: 10px; margin: 0; }
+  .clip video { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 14px; background: var(--sunk); }
+  .clip figcaption { padding-top: 10px; }
+</style>

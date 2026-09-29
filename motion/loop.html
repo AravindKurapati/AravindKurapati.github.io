@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hero loop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=block" rel="stylesheet">
+<style>
+  /* No transitions, no animations: every style below is set by seek(t). */
+  html, body { margin: 0; background: #f4f2ee; overflow: hidden; }
+  #stage { position: relative; width: 1440px; height: 1440px; background: #f4f2ee; overflow: hidden; }
+  #world { position: absolute; left: 720px; top: 720px; width: 0; height: 0; }
+  #shape { position: absolute; overflow: hidden; }
+  .layer { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .serif { font-family: 'Instrument Serif', serif; font-weight: 400; }
+  .body { font-family: 'Newsreader', serif; }
+  .ink { color: #141312; } .paper { color: #fff; }
+  .caption { position: absolute; left: 0; transform: translate(-50%, 0); white-space: nowrap; font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #6b6864; letter-spacing: .06em; text-transform: uppercase; }
+  #cursor { position: absolute; left: 0; top: 0; width: 56px; height: 56px; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="world">
+    <div id="shape">
+      <div class="layer paper mono" id="L-btn" style="width:300px;height:88px;font-size:22px">Get in touch</div>
+      <div class="layer" id="L-spin" style="width:96px;height:96px">
+        <svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="5"/><path id="spinArc" d="M28 6 A22 22 0 0 1 50 28" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="layer" id="L-check" style="width:112px;height:112px">
+        <svg width="60" height="60" viewBox="0 0 60 60"><path id="checkPath" d="M16 31 L26 41 L45 20" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1"/></svg>
+      </div>
+      <div class="layer paper mono" id="L-term" style="width:620px;height:92px;font-size:22px;justify-content:flex-start;padding-left:34px;box-sizing:border-box">
+        <span style="opacity:.55;margin-right:14px">&gt;</span><span id="termText"></span><span id="termCaret" style="display:inline-block;width:12px;height:26px;background:#fff;margin-left:3px"></span>
+      </div>
+      <div class="layer ink" id="L-tools" style="width:640px;height:380px;flex-direction:column;align-items:stretch;justify-content:flex-start;padding:38px 42px;box-sizing:border-box">
+        <div class="mono" style="font-size:15px;letter-spacing:.09em;color:#8a8782;text-transform:uppercase">agent · tool calls</div>
+        <div id="toolRows" class="mono" style="margin-top:22px;font-size:21px"></div>
+      </div>
+      <div class="layer" id="L-doc" style="width:460px;height:580px;flex-direction:column;align-items:stretch;justify-content:flex-start;padding:46px 44px;box-sizing:border-box">
+        <div class="mono" style="font-size:14px;letter-spacing:.09em;color:#8a8782;text-transform:uppercase">contract.pdf · page 3</div>
+        <div id="docLines" style="margin-top:26px"></div>
+      </div>
+      <div class="layer ink" id="L-rule" style="width:660px;height:270px;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 48px;box-sizing:border-box">
+        <div class="mono" style="font-size:15px;letter-spacing:.09em;color:#8a8782;text-transform:uppercase">rule 4.2 · extracted</div>
+        <div class="serif" style="font-size:40px;line-height:1.08;margin-top:14px">Either party may terminate with 30 days' written notice.</div>
+        <div id="nda" class="body" style="font-size:20px;color:#6b6864;margin-top:14px;font-style:italic">The rest is under NDA.</div>
+      </div>
+      <div class="layer" id="L-toggle" style="width:240px;height:120px">
+        <div id="knob" style="position:absolute;top:12px;height:96px;border-radius:48px;background:#fff"></div>
+      </div>
+      <div class="layer" id="L-grid" style="width:540px;height:540px">
+        <div id="tiles" style="display:grid;grid-template-columns:repeat(9,1fr);gap:6px;width:470px;height:470px"></div>
+      </div>
+      <div class="layer ink" id="L-film" style="width:440px;height:560px;flex-direction:column;align-items:stretch;justify-content:flex-start;padding:30px;box-sizing:border-box">
+        <div style="height:300px;border-radius:14px;background:#141312;display:flex;align-items:flex-end;padding:22px;box-sizing:border-box">
+          <div class="serif paper" id="filmPoster" style="font-size:54px;line-height:.9;text-transform:uppercase;letter-spacing:.01em"></div>
+        </div>
+        <div class="serif" style="font-size:40px;margin-top:22px;line-height:1"><span id="filmTitle"></span> <span id="filmYear" class="body" style="font-size:22px;color:#8a8782"></span></div>
+        <div id="stars" class="mono" style="font-size:30px;margin-top:14px;letter-spacing:.12em"></div>
+      </div>
+      <div class="layer ink" id="L-gym" style="width:680px;height:360px;flex-direction:column;align-items:stretch;justify-content:flex-start;padding:36px 40px;box-sizing:border-box">
+        <div class="mono" style="font-size:15px;letter-spacing:.09em;color:#8a8782;text-transform:uppercase">gym · sessions per month</div>
+        <svg id="gymSvg" width="600" height="220" viewBox="0 0 600 220" style="margin-top:22px;overflow:visible">
+          <path id="gymArea" fill="rgba(20,19,18,.07)"/>
+          <path id="gymLine" fill="none" stroke="#141312" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" pathLength="1" stroke-dasharray="1"/>
+          <circle id="gymDot" r="9" fill="#141312"/>
+          <g id="gymTip"><rect x="-96" y="-66" width="192" height="46" rx="23" fill="#141312"/><text id="gymTipText" x="0" y="-36" text-anchor="middle" fill="#fff" font-family="JetBrains Mono" font-size="18"></text></g>
+        </svg>
+      </div>
+      <div class="layer ink" id="L-place" style="width:600px;height:240px;justify-content:flex-start;padding:0 40px;box-sizing:border-box;gap:30px">
+        <svg width="86" height="112" viewBox="0 0 86 112"><path d="M43 108 C43 108 4 64 4 40 A39 39 0 0 1 82 40 C82 64 43 108 43 108 Z" fill="#141312"/><circle cx="43" cy="40" r="14" fill="#fff"/></svg>
+        <div>
+          <div class="serif" id="placeName" style="font-size:46px;line-height:1"></div>
+          <div class="mono" style="font-size:20px;margin-top:10px;letter-spacing:.1em">★★★★★</div>
+          <div class="body" id="views" style="font-size:22px;color:#6b6864;margin-top:8px"></div>
+        </div>
+      </div>
+      <div class="layer ink" id="L-cmdk" style="width:660px;height:200px;flex-direction:column;align-items:stretch;justify-content:flex-start">
+        <div style="height:96px;display:flex;align-items:center;gap:18px;padding:0 30px">
+          <span class="mono" style="font-size:17px;border:1.5px solid #d6d3ce;border-radius:8px;padding:5px 9px;color:#6b6864">⌘K</span>
+          <span class="body" id="cmdText" style="font-size:28px"></span><span id="cmdCaret" style="display:inline-block;width:2px;height:30px;background:#141312;margin-left:-14px"></span>
+          <span id="cmdPh" class="body" style="font-size:28px;color:#b3b0aa;margin-left:-16px">Search</span>
+        </div>
+        <div id="cmdResult" style="margin:0 14px;border-radius:14px;background:#f1efeb;height:72px;display:flex;align-items:center;gap:16px;padding:0 18px">
+          <span class="serif" style="font-size:30px">Aravind Kurapati</span><span class="mono" style="font-size:15px;color:#8a8782;letter-spacing:.08em;text-transform:uppercase">AI engineer</span>
+          <span class="mono" style="margin-left:auto;font-size:16px;color:#8a8782">↵</span>
+        </div>
+      </div>
+      <div class="layer paper body" id="L-toast" style="width:360px;height:88px;font-size:30px;gap:14px">
+        <span style="width:12px;height:12px;border-radius:6px;background:#fff;display:inline-block"></span>Say hi.
+      </div>
+    </div>
+    <div class="caption" id="capToggle"></div>
+  </div>
+  <svg id="cursor" viewBox="0 0 36 36"><path d="M6 3 L6 29 L13 22.5 L17.5 32 L22 30 L17.5 20.5 L27 20.5 Z" fill="#141312" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+</div>
+
+<script>
+// ---------- data (render.mjs injects window.NOW from src/data/now.json) ----------
+const NOW = window.NOW || {
+  months: ['2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09'],
+  films: { last: [{ title: 'Liar Liar', year: 1997, rating: 5 }] },
+  gym: { by_month: [0,0,0,0,0,0,0,0,0,1,13,2] },
+  place: { name: 'Apollo Bagels', badge: '200K+ views on Google Maps' },
+};
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// ---------- timing ----------
+const BPM = 120, BEAT = 60 / BPM, BEATS = 28, T = BEATS * BEAT;   // 14 s
+const b = (n) => (n - 1) * BEAT;                                    // storyboard beat n (1-based) -> seconds
+
+// Closed-form step response of a damped spring, 0 before tau=0, settles to 1.
+function S(tau, zeta = 0.82, omega = 19) {
+  if (tau <= 0) return 0;
+  if (zeta >= 1) return 1 - Math.exp(-omega * tau) * (1 + omega * tau);  // critically damped
+  const wd = omega * Math.sqrt(1 - zeta * zeta);
+  return 1 - Math.exp(-zeta * omega * tau) * (Math.cos(wd * tau) + (zeta * omega / wd) * Math.sin(wd * tau));
+}
+// A value that changes target many times = start value + one spring per change.
+class Track {
+  constructor(v0, zeta, omega) { this.v0 = v0; this.last = v0; this.steps = []; this.zeta = zeta; this.omega = omega; }
+  to(t, v, zeta = this.zeta, omega = this.omega) { this.steps.push([t, v - this.last, zeta, omega]); this.last = v; return this; }
+  at(t) { let v = this.v0; for (const [ti, dv, z, w] of this.steps) v += dv * S(t - ti, z, w); return v; }
+}
+const clamp = (x, a = 0, c = 1) => Math.min(c, Math.max(a, x));
+const ease = (x) => { x = clamp(x); return x * x * (3 - 2 * x); };
+const lerp = (a, c, x) => a + (c - a) * x;
+
+// ---------- shape states: [beat, w, h, radius, white(0|1)] ----------
+const STATES = [
+  [1, 300, 88, 44, 0],    // button
+  [3, 96, 96, 48, 0],     // loader
+  [4, 112, 112, 56, 0],   // check
+  [5, 620, 92, 22, 0],    // terminal
+  [7, 640, 380, 30, 1],   // tool calls
+  [9, 460, 580, 18, 1],   // document
+  [11, 660, 270, 26, 1],  // rule card
+  [13, 240, 120, 60, 0],  // toggle
+  [15, 540, 540, 26, 1],  // slide tiles
+  [17, 440, 560, 26, 1],  // film
+  [19, 680, 360, 28, 1],  // gym chart
+  [21, 600, 240, 28, 1],  // place
+  [23, 660, 96, 24, 1],   // command palette
+  [25, 660, 200, 24, 1],  // palette result on enter
+  [26, 360, 88, 44, 0],   // toast
+  [27, 300, 88, 44, 0],   // back to the button
+];
+const W = new Track(300, .82, 19), H = new Track(88, .82, 19), R = new Track(44, .85, 19), M = new Track(0, 1, 16);
+for (const [n, w, h, r, m] of STATES.slice(1)) { const t = b(n); W.to(t, w); H.to(t, h); R.to(t, r); M.to(t, m); }
+
+// Layers: [id, in, out]. Out is earlier than the next in so swapping text never overlaps.
+const LAYERS = [
+  ['L-btn', -Infinity, b(3) - 0.08], ['L-btn', b(27), Infinity],
+  ['L-spin', b(3), b(4) - 0.06], ['L-check', b(4), b(5) - 0.08],
+  ['L-term', b(5), b(7) - 0.08], ['L-tools', b(7), b(9) - 0.08],
+  ['L-doc', b(9), b(11) - 0.08], ['L-rule', b(11), b(13) - 0.08],
+  ['L-toggle', b(13), b(15) - 0.08], ['L-grid', b(15), b(17) - 0.08],
+  ['L-film', b(17), b(19) - 0.08], ['L-gym', b(19), b(21) - 0.08],
+  ['L-place', b(21), b(23) - 0.08], ['L-cmdk', b(23), b(26) - 0.08],
+  ['L-toast', b(26), b(27) - 0.08],
+];
+const ENTER = 0.2, EXIT = 0.1;
+function layerAlpha(id, t) {
+  let a = 0;
+  for (const [lid, tin, tout] of LAYERS) if (lid === id) {
+    const ain = tin === -Infinity ? 1 : ease((t - tin - 0.04) / ENTER);
+    const aout = tout === Infinity ? 1 : 1 - ease((t - (tout - EXIT)) / EXIT);
+    a = Math.max(a, Math.min(ain, aout));
+  }
+  return a;
+}
+
+// ---------- build static content ----------
+const $ = (id) => document.getElementById(id);
+const film = NOW.films?.last?.[0] ?? { title: 'Liar Liar', year: 1997, rating: 5 };
+$('filmPoster').textContent = film.title;
+$('filmTitle').textContent = film.title;
+$('filmYear').textContent = film.year ? `(${film.year})` : '';
+$('placeName').textContent = NOW.place?.name ?? 'Apollo Bagels';
+const TOOLS = [['read_file', 'contract.pdf'], ['extract_clauses', '14 found'], ['write_rules', 'rules.json']];
+$('toolRows').innerHTML = TOOLS.map(([f, a], i) =>
+  `<div id="tool${i}" style="display:flex;gap:18px;padding:14px 0;border-bottom:1px solid #eeebe6"><span style="color:#141312">✓</span><span>${f}</span><span style="margin-left:auto;color:#8a8782">${a}</span></div>`).join('');
+const DOC = [1, .92, .97, .7, 1, .88, .95, .6, .9, .8];
+const HL = [2, 5, 6];
+$('docLines').innerHTML = DOC.map((w, i) =>
+  `<div style="position:relative;height:18px;margin:0 0 22px"><div style="position:absolute;inset:0;width:${w * 100}%;border-radius:9px;background:#e4e1dc"></div><div id="hl${i}" style="position:absolute;top:-6px;bottom:-6px;left:-8px;width:calc(${w * 100}% + 16px);border-radius:10px;background:#141312;opacity:0"></div></div>`).join('');
+$('tiles').innerHTML = Array.from({ length: 81 }, (_, i) => `<div id="tile${i}" style="border-radius:5px"></div>`).join('');
+// deterministic pseudo-random tones and an attention map with two hot spots
+const rnd = (i) => { const x = Math.sin(i * 12.9898) * 43758.5453; return x - Math.floor(x); };
+const ATT = Array.from({ length: 81 }, (_, i) => {
+  const x = i % 9, y = Math.floor(i / 9);
+  const g = (cx, cy, s) => Math.exp(-((x - cx) ** 2 + (y - cy) ** 2) / (2 * s * s));
+  return clamp(0.95 * g(2.5, 3, 1.4) + 0.75 * g(6.5, 6, 1.1));
+});
+
+// gym chart geometry
+const gym = NOW.gym?.by_month ?? [0,0,0,0,0,0,0,0,0,1,13,2];
+const gmax = Math.max(...gym, 1), GW = 600, GH = 200;
+const gpts = gym.map((v, i) => [i * GW / (gym.length - 1), GH - (v / gmax) * (GH - 20) + 10]);
+const gpath = gpts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
+$('gymLine').setAttribute('d', gpath);
+$('gymArea').setAttribute('d', `${gpath} L ${GW} ${GH + 10} L 0 ${GH + 10} Z`);
+const peakI = gym.indexOf(Math.max(...gym));
+const [px, py] = gpts[peakI];
+$('gymTip').setAttribute('transform', `translate(${px},${py})`);
+$('gymTipText').textContent = `${gym[peakI]} in ${MONTHS[Number((NOW.months?.[peakI] ?? '2026-08').slice(5)) - 1]}`;
+$('gymDot').setAttribute('cx', gpts.at(-1)[0]); $('gymDot').setAttribute('cy', gpts.at(-1)[1]);
+
+// ---------- camera: zoom so the current shape fills about 70% of the frame ----------
+const camFor = (w, h) => Math.min(0.7 * 1440 / w, 0.7 * 1440 / h, 2.4);
+
+// ---------- cursor: screen-space waypoints, springs between them ----------
+// Positions that depend on camera are computed from the settled state.
+const cam = (n) => { const s = STATES.find((x) => x[0] === n); return camFor(s[1], s[2]); };
+const REST = [1060, 1010];
+const gymCam = cam(19);
+const gymPeakScreen = [720 + (px + 40 - 340) * gymCam, 720 + (py + 36 + 15 + 22 - 180) * gymCam];
+const knobL = 720 - 60 * cam(13), knobR = 720 + 60 * cam(13);
+const WAY = [
+  [b(1) + 0.05, 770, 745], [b(3) + 0.2, ...REST],
+  [b(12) + 0.1, knobL + 12, 728],                 // hover the toggle knob
+  [b(14) + 0.02, knobR + 12, 728],                // drag it across on the beat
+  [b(14) + 0.35, ...REST],
+  [b(19) + 0.25, ...gymPeakScreen],               // hover the peak
+  [b(21) + 0.1, ...REST],
+  [b(26) + 0.02, 735, 742],                       // click the toast
+  [b(27) + 0.12, ...REST],
+];
+const CX = new Track(REST[0], .9, 11), CY = new Track(REST[1], .9, 11);
+for (const [t, x, y] of WAY) { CX.to(t, x); CY.to(t, y); }
+const CLICKS = [b(2), b(14), b(26) + 0.3];
+const press = (t) => CLICKS.reduce((p, c) => p + (S(t - c, .7, 40) - S(t - c - 0.09, .7, 40)), 0);
+
+// toggle: the knob's two edges ride different springs, so the leading edge stretches ahead
+const KNOB_L = new Track(12, .8, 22).to(b(14), 132, .8, 26);
+const KNOB_R = new Track(108, .8, 22).to(b(14), 228, .8, 16);
+
+// ---------- seek(t): the only place anything changes ----------
+function seek(tRaw) {
+  const t = ((tRaw % T) + T) % T;
+  const w = W.at(t), h = H.at(t), r = Math.max(0, R.at(t)), m = clamp(M.at(t));
+  const c = camFor(w, h) * (1 - 0.035 * press(t) * (t < b(3) || t > b(26) ? 1 : 0));
+
+  $('world').style.transform = `scale(${c})`;
+  const shape = $('shape');
+  shape.style.width = `${w}px`; shape.style.height = `${h}px`;
+  shape.style.left = `${-w / 2}px`; shape.style.top = `${-h / 2}px`;
+  shape.style.borderRadius = `${r}px`;
+  const ch = Math.round(lerp(20, 255, m));
+  shape.style.background = `rgb(${ch},${Math.round(lerp(19, 255, m))},${Math.round(lerp(18, 255, m))})`;
+  shape.style.boxShadow = `0 ${2 + 6 * m}px ${10 + 30 * m}px rgba(20,19,18,${0.1 * m})`;
+
+  for (const el of document.querySelectorAll('.layer')) {
+    const a = layerAlpha(el.id, t);
+    el.style.opacity = a;
+    el.style.filter = a > 0.999 ? 'none' : `blur(${(1 - a) * 10}px)`;
+    el.style.visibility = a <= 0.001 ? 'hidden' : 'visible';
+  }
+
+  // loader + check
+  $('spinArc').setAttribute('transform', `rotate(${((t - b(3)) * 720) % 360} 28 28)`);
+  $('checkPath').style.strokeDashoffset = 1 - ease((t - b(4) - 0.05) / 0.3);
+
+  // terminal typing, then a blinking caret
+  const cmd = 'claude "turn this contract into rules"';
+  const typed = Math.floor(clamp((t - b(6)) / 0.42) * cmd.length);
+  $('termText').textContent = cmd.slice(0, typed);
+  $('termCaret').style.opacity = Math.floor(t / (BEAT / 2)) % 2 === 0 || (t > b(6) && t < b(6) + 0.45) ? 1 : 0;
+
+  // tool calls stream in, one every quarter beat
+  TOOLS.forEach((_, i) => {
+    const a = ease((t - b(8) - i * 0.12) / 0.18);
+    const el = $(`tool${i}`); el.style.opacity = a; el.style.transform = `translateY(${(1 - a) * 12}px)`;
+  });
+
+  // document highlights on the beat
+  DOC.forEach((_, i) => { $(`hl${i}`).style.opacity = HL.includes(i) ? 0.12 * ease((t - b(10) - HL.indexOf(i) * 0.06) / 0.18) : 0; });
+  $('nda').style.opacity = ease((t - b(12)) / 0.2);
+
+  // toggle
+  const l = KNOB_L.at(t), rr = KNOB_R.at(t);
+  $('knob').style.left = `${l}px`; $('knob').style.width = `${rr - l}px`;
+  const cap = $('capToggle');
+  const onA = ease((t - b(14)) / 0.15);
+  cap.textContent = onA < 0.5 ? 'naive grader' : 'hardened grader';
+  cap.style.top = `${h / 2 + 28}px`;
+  cap.style.opacity = layerAlpha('L-toggle', t) * (onA < 0.5 ? 1 - onA * 2 : (onA - 0.5) * 2);
+
+  // slide tiles, then attention
+  const heat = ease((t - b(16)) / 0.4);
+  for (let i = 0; i < 81; i++) {
+    const base = 226 - rnd(i) * 22;
+    const v = lerp(base, lerp(base, 20, ATT[i]), heat);
+    $(`tile${i}`).style.background = `rgb(${v | 0},${(v - 3) | 0},${(v - 6) | 0})`;
+  }
+
+  // film stars fill one by one
+  const n = Math.round(film.rating ?? 5);
+  $('stars').innerHTML = Array.from({ length: 5 }, (_, i) => {
+    const on = i < n ? ease((t - b(18) - i * 0.07) / 0.1) : 0;
+    return `<span style="display:inline-block;color:${on > 0.5 ? '#141312' : '#d6d3ce'};transform:scale(${1 + 0.25 * Math.sin(Math.PI * on)})">★</span>`;
+  }).join('');
+
+  // gym line draws itself; tooltip pops on the beat
+  $('gymLine').style.strokeDashoffset = 1 - ease((t - b(19) - 0.05) / 0.45);
+  $('gymArea').style.opacity = ease((t - b(19) - 0.3) / 0.2);
+  $('gymDot').style.opacity = ease((t - b(19) - 0.45) / 0.1);
+  const tip = S(t - b(20), .6, 22);
+  $('gymTip').style.opacity = clamp(tip);
+  $('gymTip').setAttribute('transform', `translate(${px},${py}) scale(${0.6 + 0.4 * tip})`);
+
+  // views counter ticks up
+  const k = ease((t - b(22)) / 0.4);
+  $('views').textContent = k >= 1 ? (NOW.place?.badge ?? '200K+ views') : `${Math.round(200 * k)}K views`;
+
+  // command palette: pin its content to the top edge while the bar grows
+  $('L-cmdk').style.transform = `translate(-50%, calc(-50% + ${100 - h / 2}px))`;
+  const q = 'aravind';
+  const qn = Math.floor(clamp((t - b(24)) / 0.3) * q.length);
+  $('cmdText').textContent = q.slice(0, qn);
+  $('cmdPh').style.display = qn ? 'none' : 'inline';
+  $('cmdCaret').style.opacity = Math.floor(t / (BEAT / 2)) % 2 === 0 ? 1 : 0;
+  $('cmdResult').style.opacity = ease((t - b(25) - 0.05) / 0.15);
+
+  // cursor
+  const cx = CX.at(t), cy = CY.at(t), p = press(t);
+  $('cursor').style.transform = `translate(${cx}px, ${cy}px) scale(${1 - 0.18 * p})`;
+}
+
+window.seek = seek;
+window.LOOP = { T, BEAT, BEATS };
+window.ready = document.fonts.ready.then(() => { seek(0); return true; });
+if (!window.NOW_RENDER) {
+  // Preview in a browser: play in real time.
+  const t0 = performance.now();
+  const tick = () => { seek((performance.now() - t0) / 1000); requestAnimationFrame(tick); };
+  window.ready.then(() => requestAnimationFrame(tick));
+}
+</script>
+</body>
+</html>

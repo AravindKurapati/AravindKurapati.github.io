@@ -1,0 +1,101 @@
+---
+import '../styles/global.css';
+import '../styles/palettes.css';
+import fs from 'node:fs';
+import nodePath from 'node:path';
+import { links } from '../data/profile';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = 'Aravind Kurapati',
+  description = 'AI engineer in New York. Forward-deployed engineer at Virtusa.',
+} = Astro.props;
+const fullTitle = title === 'Aravind Kurapati' ? title : `${title} · Aravind Kurapati`;
+const path = Astro.url.pathname;
+// Share card rendered by scripts/og.mjs: '/' is home, '/work/x/' is work-x, '/now/' is now.
+const ogName = path === '/' ? 'home' : path.replace(/^\/|\/$/g, '').replace(/\//g, '-');
+const hasCard = (n: string) => fs.existsSync(nodePath.join(process.cwd(), 'public', 'og', `${n}.png`));
+// No card of its own (e.g. a single post): fall back to its section's card, then home.
+const ogFile = [ogName, ogName.split('-')[0], 'home'].find(hasCard);
+const ogImage = new URL(`/og/${ogFile}.png`, Astro.site);
+const nav = [
+  { href: '/#work', label: 'Work' },
+  { href: '/writing/', label: 'Writing' },
+  { href: '/now/', label: 'Now' },
+  { href: '/after-hours/', label: 'After hours' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(path, Astro.site)} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={new URL(path, Astro.site)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="Writing" href="/rss.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
+    />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-nav">
+        {path === '/' ? <span></span> : <a class="me" href="/">Aravind Kurapati</a>}
+        <nav aria-label="Main">
+          {nav.map((n) => (
+            <a href={n.href} aria-current={path.startsWith(n.href) && n.href !== '/#work' ? 'page' : undefined}>{n.label}</a>
+          ))}
+        </nav>
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer class="site-foot">
+        <span>Aravind Kurapati · New York</span>
+        <span class="foot-links">
+          <a href={links.email}>Email</a>
+          <a href={links.linkedin} rel="noopener noreferrer" target="_blank">LinkedIn</a>
+          <a href={links.github} rel="noopener noreferrer" target="_blank">GitHub</a>
+          <a href={links.medium} rel="noopener noreferrer" target="_blank">Medium</a>
+          <a href="/colophon/">Colophon</a>
+        </span>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<style>
+  .site-nav {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 4px 6px 16px;
+  }
+  .me { font-family: var(--serif); font-size: 24px; text-decoration: none; }
+  nav { display: flex; gap: 18px; font-family: var(--mono); font-size: 12px; }
+  nav a { text-decoration: none; color: var(--ink-3); }
+  nav a:hover, nav a[aria-current='page'] { color: var(--ink); text-decoration: underline; }
+  .site-foot {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px;
+    margin-top: 40px; padding: 0 6px;
+    font-family: var(--mono); font-size: 12px; color: var(--ink-4);
+  }
+  .foot-links { display: flex; gap: 16px; flex-wrap: wrap; }
+  .foot-links a { text-decoration: none; }
+  .foot-links a:hover { color: var(--ink); text-decoration: underline; }
+</style>

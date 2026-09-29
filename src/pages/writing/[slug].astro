@@ -1,0 +1,44 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('writing');
+  return posts.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const date = d.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+---
+<Base title={d.title} description={d.description}>
+  <article class="tile post">
+    <p class="lbl">Writing · {date}</p>
+    <h1>{d.title}</h1>
+    <div class="prose"><Content /></div>
+    <p class="foot">
+      <a href="/writing/">All writing</a>
+      <a href={d.medium} target="_blank" rel="noopener noreferrer">Also on Medium</a>
+    </p>
+  </article>
+</Base>
+
+<style>
+  .post { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: clamp(38px, 6vw, 58px); line-height: 1.02; margin: 12px 0 18px; }
+  .prose { max-width: 68ch; }
+  .prose :global(h3), .prose :global(h4) { font-family: var(--serif); font-weight: 400; font-size: 30px; line-height: 1.1; margin: 32px 0 10px; }
+  .prose :global(h4) { font-size: 24px; }
+  .prose :global(p), .prose :global(li) { font-size: 19px; line-height: 1.65; color: #2b2a28; }
+  .prose :global(p) { margin: 0 0 16px; }
+  .prose :global(blockquote) { margin: 18px 0; padding-left: 18px; border-left: 3px solid var(--platform); font-style: italic; }
+  .prose :global(figure) { margin: 22px 0; }
+  .prose :global(img) { width: 100%; height: auto; border-radius: 12px; }
+  .prose :global(figcaption) { font-size: 14px; color: var(--ink-3); margin-top: 8px; }
+  .prose :global(pre) { background: #141312; color: #efe9df; border-radius: 12px; padding: 14px 16px; overflow-x: auto; font-family: var(--mono); font-size: 13px; line-height: 1.55; }
+  .prose :global(code) { font-family: var(--mono); font-size: 0.85em; }
+  .prose :global(:not(pre) > code) { background: var(--sunk); padding: 1px 5px; border-radius: 4px; }
+  .prose :global(a) { text-decoration: underline; }
+  .prose :global(hr) { border: 0; border-top: 1px solid var(--rule); margin: 28px 0; }
+  .foot { display: flex; justify-content: space-between; margin-top: 30px; font-family: var(--mono); font-size: 12px; }
+</style>

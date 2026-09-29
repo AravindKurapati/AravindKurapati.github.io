@@ -1,0 +1,62 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Replay from '../../components/Replay.astro';
+import CheatChart from '../../components/figures/CheatChart.astro';
+import MsaChart from '../../components/figures/MsaChart.astro';
+import AfrCommands from '../../components/figures/AfrCommands.astro';
+
+export async function getStaticPaths() {
+  const work = await getCollection('work', (e) => !e.data.draft);
+  return work.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+---
+<Base title={d.title} description={d.tagline}>
+  <div class="layout">
+    <aside data-tone={`work-${d.order}`} class="tile card">
+      <p class="lbl">Result</p>
+      <p class="value serif">{d.result.value}</p>
+      <p class="caption">{d.result.caption}</p>
+      <dl>
+        {d.facts.map((f) => (<div class="row"><dt class="lbl">{f.k}</dt><dd>{f.v}</dd></div>))}
+      </dl>
+      <p class="links">
+        {d.links.map((l) => l.url.startsWith('/') ? <a href={l.url}>{l.label}</a> : <a href={l.url} target="_blank" rel="noopener noreferrer">{l.label}</a>)}
+      </p>
+    </aside>
+    <article class="tile article">
+      <p class="lbl">Work · {d.year} · {d.kind}</p>
+      <h1>{d.title}</h1>
+      <p class="dek">{d.tagline}</p>
+      {d.figure === 'cheat-rate' && <CheatChart />}
+      {d.figure === 'msa-sources' && <MsaChart />}
+      {d.figure === 'afr-commands' && <AfrCommands />}
+      <div class="prose"><Content /></div>
+      <p class="back"><a href="/#work">Back to all work</a></p>
+    </article>
+  </div>
+  {entry.id === 'durable-notebook' && <Replay />}
+</Base>
+
+<style>
+  .layout { display: grid; gap: var(--gap); grid-template-columns: 1fr; align-items: start; }
+  @media (min-width: 960px) { .layout { grid-template-columns: 320px 1fr; } .card { position: sticky; top: 16px; } }
+  .value { font-size: 48px; line-height: 1; margin: 10px 0 8px; }
+  .caption { font-size: 15px; color: var(--ink-3); line-height: 1.45; }
+  dl { margin: 18px 0 0; }
+  .row { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--rule); }
+  dd { margin: 0; font-size: 15px; text-align: right; }
+  .links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; font-family: var(--mono); font-size: 12px; }
+  .article h1 { font-size: clamp(40px, 6vw, 60px); line-height: 1; margin-top: 12px; }
+  .dek { font-size: 22px; line-height: 1.45; color: var(--ink-2); margin: 16px 0 8px; max-width: 42ch; }
+  .prose { max-width: 66ch; }
+  .prose :global(h2) { font-size: 32px; margin: 34px 0 10px; }
+  .prose :global(p) { font-size: 19px; line-height: 1.65; color: #2b2a28; margin: 0 0 14px; }
+  .prose :global(code) { font-family: var(--mono); font-size: 0.8em; background: var(--sunk); padding: 1px 5px; border-radius: 4px; }
+  .prose :global(mark.check) { display: block; background: #fff4c2; padding: 10px 12px; border-radius: 8px; font-family: var(--mono); font-size: 12px; margin: 14px 0; }
+  .back { margin-top: 30px; font-family: var(--mono); font-size: 12px; }
+</style>
