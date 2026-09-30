@@ -1,0 +1,48 @@
+---
+// Real output from my own afr database (2026-09-29), trimmed to rows that are safe to publish.
+---
+<figure class="fig term">
+  <figcaption class="bar"><span></span><span></span><span></span><em>afr, on my laptop</em></figcaption>
+  <pre><span class="p">$</span> <b>afr stats</b>
+Total runs: 387
+
+Outcomes
+  untagged: 362
+  shipped: 19
+  exploratory: 6
+
+Tokens  3,550,153 in / 10,577,323 out
+Errors  357 tool | 209 shell
+
+Top Tools
+  Bash: 2292
+  Read: 1041
+  Edit: 554
+  Write: 359
+
+<span class="p">$</span> <b>afr search "grader"</b>
+<span class="h">ID        Goal                                 Out     Date</span>
+36d9c7d6  in the current md file, what did..   7.9K    2026-09-20
+f084e35b  i wanted to contribute to some o..   10.2K   2026-09-19
+bb51c40e  is the work done? is there anyth..   3.1K    2026-09-19
+
+<span class="p">$</span> <b>afr resume 36d9c7d6</b>
+Session: 36d9c7d6-7bc4-4050-b715-426244922d51  (claude)
+branch: v1-taskset-port
+
+Resume with:
+  cd "D:\Aru\NYU\durable-notebook\environments\durable_notebook" &amp;&amp; claude
+--resume 36d9c7d6-7bc4-4050-b715-426244922d51</pre>
+</figure>
+
+<style>
+  .term { margin: 22px 0 26px; background: #141312; color: #cfc8bc; border-radius: 14px; overflow: hidden; }
+  .bar { display: flex; gap: 6px; align-items: center; padding: 10px 14px; background: #24221f; }
+  .bar span { width: 10px; height: 10px; border-radius: 50%; background: #4a4640; }
+  .bar em { font-style: normal; font-family: var(--mono); font-size: 12px; color: #a9a298; margin-left: 8px; }
+  pre { margin: 0; padding: 16px 18px 18px; font-family: var(--mono); font-size: 13px; line-height: 1.55; overflow-x: auto; white-space: pre; }
+  b { color: #f3d15c; font-weight: 500; }
+  .p { color: #7d766c; }
+  .h { color: #a9a298; }
+  @media (max-width: 560px) { pre { font-size: 11px; } }
+</style>

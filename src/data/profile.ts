@@ -70,19 +70,24 @@ export const publications = [
 
 export const moreWork = [
   {
+    name: 'Lung cancer subtypes, without labels',
+    what: 'NYU Langone, 2024: Barlow Twins SSL on 841K tiles, then InceptionV3 on NYU HPC.',
+    url: '/work/tcga-lung-ssl/',
+  },
+  {
     name: 'Reading lymphoma subtypes from slides',
-    what: 'NYU Langone: self-supervised encoders and attention MIL on gigapixel pathology slides.',
-    url: 'https://github.com/AravindKurapati/Follicular-Lymphoma-Subtypes',
+    what: 'NYU Langone, 2025: ViT features and attention MIL on follicular lymphoma slides.',
+    url: '/work/follicular-lymphoma/',
   },
   {
     name: 'Open source',
-    what: 'A docs PR to verifiers (Prime Intellect) and answers on long-unanswered AlphaFold issues.',
-    url: 'https://github.com/PrimeIntellect-ai/verifiers/pull/2635',
+    what: 'Tested fixes and answers in AlphaFold, prime-rl and verifiers.',
+    url: '/work/open-source/',
   },
   {
-    name: 'locus',
+    name: 'querencia',
     what: 'A personal knowledge graph of places, built from my own Google Maps history.',
-    url: null,
+    url: '/work/querencia/',
   },
   {
     name: 'Eleven trackers, one monthly hub',
@@ -90,4 +95,3 @@ export const moreWork = [
     url: '/now',
   },
 ];
-

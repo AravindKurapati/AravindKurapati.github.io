@@ -4,7 +4,8 @@ import Base from '../../layouts/Base.astro';
 import Replay from '../../components/Replay.astro';
 import CheatChart from '../../components/figures/CheatChart.astro';
 import MsaChart from '../../components/figures/MsaChart.astro';
-import AfrCommands from '../../components/figures/AfrCommands.astro';
+import AfrSession from '../../components/figures/AfrSession.astro';
+import HpcTiles from '../../components/figures/HpcTiles.astro';
 
 export async function getStaticPaths() {
   const work = await getCollection('work', (e) => !e.data.draft);
@@ -34,7 +35,8 @@ const d = entry.data;
       <p class="dek">{d.tagline}</p>
       {d.figure === 'cheat-rate' && <CheatChart />}
       {d.figure === 'msa-sources' && <MsaChart />}
-      {d.figure === 'afr-commands' && <AfrCommands />}
+      {d.figure === 'afr-session' && <AfrSession />}
+      {d.figure === 'hpc-tiles' && <HpcTiles />}
       <div class="prose"><Content /></div>
       <p class="back"><a href="/#work">Back to all work</a></p>
     </article>
@@ -51,6 +53,7 @@ const d = entry.data;
   .row { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--rule); }
   dd { margin: 0; font-size: 15px; text-align: right; }
   .links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; font-family: var(--mono); font-size: 12px; }
+  .article { min-width: 0; }
   .article h1 { font-size: clamp(40px, 6vw, 60px); line-height: 1; margin-top: 12px; }
   .dek { font-size: 22px; line-height: 1.45; color: var(--ink-2); margin: 16px 0 8px; max-width: 42ch; }
   .prose { max-width: 66ch; }

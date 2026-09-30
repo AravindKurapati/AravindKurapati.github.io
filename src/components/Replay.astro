@@ -173,6 +173,7 @@ const others = replay.replays.filter((r) => r.naive === 1 && r.hardened === 0);
 
 <style>
   .replay { margin-top: 40px; display: grid; gap: var(--gap); }
+  .replay > * { min-width: 0; }
   .top h2 { font-size: clamp(38px, 5vw, 52px); margin-top: 10px; }
   .intro { font-size: 18px; color: var(--ink-2); margin-top: 10px; max-width: 64ch; }
   .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 18px; }
@@ -186,6 +187,7 @@ const others = replay.replays.filter((r) => r.naive === 1 && r.hardened === 0);
 
   .panes { display: grid; gap: var(--gap); grid-template-columns: 1fr; align-items: start; }
   @media (min-width: 960px) { .panes { grid-template-columns: 1.2fr 1fr; } .side { position: sticky; top: 16px; } }
+  .panes > *, .side > * { min-width: 0; }
   .side { display: grid; gap: var(--gap); }
   .convo ol { list-style: none; padding: 0; margin: 12px 0 0; max-height: 620px; overflow-y: auto; }
   .msg { padding: 12px 0; border-bottom: 1px solid var(--rule); transition: opacity 0.2s ease; }
@@ -202,7 +204,7 @@ const others = replay.replays.filter((r) => r.naive === 1 && r.hardened === 0);
 
   .files table, .truth, .runs table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 16px; }
   .files td { padding: 8px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
-  .files .path { font-family: var(--mono); font-size: 13px; width: 45%; color: var(--ink-3); }
+  .files .path { font-family: var(--mono); font-size: 13px; width: 45%; color: var(--ink-3); word-break: break-all; }
   .files tr.changed td { font-weight: 500; }
   .files tr.changed .path::before { content: '* '; }
   .files tr.lost td:last-child { color: var(--signal); }

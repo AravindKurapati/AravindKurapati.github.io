@@ -6,7 +6,7 @@ import HeroNow from '../components/HeroNow.astro';
 import platform from '../assets/platform.jpeg';
 import { links, experience, education, publications, moreWork } from '../data/profile';
 
-const work = (await getCollection('work', (e) => !e.data.draft)).sort((a, b) => a.data.order - b.data.order);
+const work = (await getCollection('work', (e) => !e.data.draft && e.data.featured)).sort((a, b) => a.data.order - b.data.order);
 ---
 <Base>
   <section class="hero">

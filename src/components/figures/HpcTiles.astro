@@ -1,0 +1,26 @@
+---
+// Two phenotype clusters from my 2024 HPL reproduction (archive/Histomorphological-Phenotype-Learning/Clustered images).
+import { Image } from 'astro:assets';
+import c13 from '../../assets/work/hpc-cluster-13.jpg';
+import c0 from '../../assets/work/hpc-cluster-0.jpg';
+const strips = [
+  { img: c13, k: 'Cluster 13' },
+  { img: c0, k: 'Cluster 0' },
+];
+---
+<figure class="fig">
+  {strips.map((s) => (
+    <div class="strip">
+      <p class="lbl">{s.k}</p>
+      <Image src={s.img} alt={`Training tiles grouped into ${s.k.toLowerCase()} by the self-supervised model`} widths={[800, 1600]} sizes="(min-width: 960px) 760px, 100vw" />
+    </div>
+  ))}
+  <figcaption class="note">Tiles the model grouped together on its own. No labels were used to form either cluster.</figcaption>
+</figure>
+
+<style>
+  .fig { margin: 22px 0 26px; }
+  .strip { margin-bottom: 12px; }
+  .strip :global(img) { display: block; width: 100%; height: auto; border-radius: 8px; margin-top: 6px; }
+  .note { font-size: 15px; color: var(--ink-3); line-height: 1.45; }
+</style>

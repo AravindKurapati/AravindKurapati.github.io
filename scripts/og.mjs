@@ -35,6 +35,10 @@ const cards = [
   { name: 'work-agent-flight-recorder', ...work('agent-flight-recorder'), tone: 'platform' },
   { name: 'work-durable-notebook', ...work('durable-notebook'), tone: 'sky' },
   { name: 'work-alphafold', ...work('alphafold'), tone: 'slate' },
+  { name: 'work-tcga-lung-ssl', ...work('tcga-lung-ssl'), tone: 'white' },
+  { name: 'work-follicular-lymphoma', ...work('follicular-lymphoma'), tone: 'white' },
+  { name: 'work-open-source', ...work('open-source'), tone: 'white' },
+  { name: 'work-querencia', ...work('querencia'), tone: 'white' },
 ];
 
 const html = (c) => {
