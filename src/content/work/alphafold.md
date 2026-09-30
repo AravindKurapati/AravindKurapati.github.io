@@ -19,6 +19,8 @@ links:
   - { label: Blog post, url: "/writing/when-300-and-2-8tb-nearly-broke-my-alphafold/" }
 ---
 
-I ran DeepMind's AlphaFold2 end to end on one GCP VM with a T4 and predicted the structure of human insulin. The weights are 5 GB; the hard part is the 2.5 TB of databases it searches first.
-
-Most of the work was infrastructure: a boot disk that filled during Docker pulls, a cloud kernel without the NVIDIA headers, a corrupted apt source, and a 1.7 TB database extraction that ran the disk dry halfway through. It ran, and produced all five models.
+- Ran DeepMind's AlphaFold2 end to end on one GCP VM with a T4, and predicted the structure of human insulin.
+- The weights are 5 GB. The hard part is the 2.5 TB of databases it searches first.
+- Fixed a boot disk that filled during Docker pulls, a cloud kernel missing NVIDIA headers, and a corrupted apt source.
+- A 1.7 TB database extraction ran the disk dry halfway, so I grew the disk and filesystem live.
+- It ran, and produced all five models.

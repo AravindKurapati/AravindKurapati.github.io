@@ -59,6 +59,9 @@ const d = entry.data;
   .prose { max-width: 66ch; }
   .prose :global(h2) { font-size: 32px; margin: 34px 0 10px; }
   .prose :global(p) { font-size: 19px; line-height: 1.65; color: #2b2a28; margin: 0 0 14px; }
+  .prose :global(ul) { margin: 26px 0 0; padding: 0; list-style: none; }
+  .prose :global(li) { position: relative; padding: 0 0 0 22px; margin: 0 0 14px; font-size: 19px; line-height: 1.55; color: #2b2a28; }
+  .prose :global(li)::before { content: ''; position: absolute; left: 2px; top: 0.62em; width: 7px; height: 7px; border-radius: 50%; background: var(--ink-4); }
   .prose :global(code) { font-family: var(--mono); font-size: 0.8em; background: var(--sunk); padding: 1px 5px; border-radius: 4px; }
   .prose :global(mark.check) { display: block; background: #fff4c2; padding: 10px 12px; border-radius: 8px; font-family: var(--mono); font-size: 12px; margin: 14px 0; }
   .back { margin-top: 30px; font-family: var(--mono); font-size: 12px; }

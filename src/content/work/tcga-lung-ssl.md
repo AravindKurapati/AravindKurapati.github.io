@@ -19,6 +19,7 @@ links:
   - { label: Blog post, url: "/writing/when-100-cold-emails-and-850k-histopathology-tiles-changed/" }
 ---
 
-I reproduced the lab's Histomorphological Phenotype Learning pipeline on NYU's HPC cluster: Barlow Twins learns an embedding for every H&E tile with no labels, and Leiden clustering groups the tiles into tissue phenotypes like the ones above.
-
-Then I tested whether an InceptionV3 trained directly on each slide's grid of tile embeddings could beat the paper's simple head, a logistic regression on cluster proportions, at telling the two lung cancers apart. It did not. Most of the work was the plumbing: HDF5 tile stores, multi-GPU SLURM jobs, and a patient-level split so no patient lands in both train and test.
+- Reproduced the lab's Histomorphological Phenotype Learning pipeline on NYU's HPC cluster.
+- Barlow Twins learns an embedding for every H&E tile with no labels; Leiden clustering groups tiles into tissue phenotypes like the ones above.
+- Tested whether an InceptionV3 on each slide's grid of tile embeddings could beat the paper's logistic regression on cluster proportions. It did not.
+- Most of the work was plumbing: HDF5 tile stores, multi-GPU SLURM jobs, and a patient-level train/test split.

@@ -19,6 +19,8 @@ links:
   - { label: Blog post, url: "/writing/i-built-a-cli-to-read-my-own-claude/" }
 ---
 
-`afr` reads the session logs Claude Code and Codex already write and puts them into one local SQLite file: the goal, every tool call, every shell command with its exit code, files touched and tokens. A hook ingests each session the moment it closes, so it stays current on its own.
-
-I use it to find the session where I already solved something, to see which commands keep failing, and to jump back into a session in the folder it ran in. Secrets are redacted and nothing leaves the laptop. It just makes my life easier.
+- Reads the session logs Claude Code and Codex already write, into one local SQLite file.
+- Keeps the goal, every tool call, every shell command with its exit code, files touched and tokens.
+- A hook ingests each session the moment it closes, so it stays current on its own.
+- I use it to find where I already solved something, spot commands that keep failing, and jump back into old sessions.
+- Secrets are redacted and nothing leaves the laptop. It just makes my life easier.

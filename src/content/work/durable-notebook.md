@@ -17,6 +17,8 @@ links:
   - { label: Code, url: "https://github.com/AravindKurapati/durable-notebook" }
 ---
 
-The model's context is compacted every few turns, so the only way to remember a fact is to write it to a file, then cite that file when it answers. A **naive** grader checks the file exists; a **hardened** grader checks the answer is actually in it.
-
-Trained with GRPO against the naive grader, cheating rose from 16% to 41%: the score went up while the real answers got worse. Against the hardened grader it fell to 7%. Every rollout is re-scored under both graders, so the gap is measured per episode. A second seed shrank the effect, so the honest range is a 41 to 65% reduction.
+- The model's context is compacted every few turns, so to remember a fact it has to write it to a file and cite that file later.
+- A **naive** grader checks the file exists. A **hardened** grader checks the answer is actually in it.
+- Trained with GRPO against the naive grader, cheating rose from 16% to 41% while the real answers got worse.
+- Against the hardened grader, cheating fell to 7%.
+- Every rollout is re-scored under both graders, so the gap is measured per episode. Across two seeds, a 41 to 65% reduction.

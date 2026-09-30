@@ -14,6 +14,7 @@ links:
   - { label: Code, url: "https://github.com/AravindKurapati/querencia" }
 ---
 
-Google wiped my Timeline history in its 2024 migration, but my Maps contributions survived: reviews, photos, saved places, routes. querencia turns them into a graph I can search by meaning, draw, and ask things like "what would I like in a city I have never been to?"
-
-It runs locally, and as an MCP server so Claude can query it. My gym tracker reads it too, to tag where each walk went.
+- Google wiped my Timeline history in 2024, but my Maps contributions survived: reviews, photos, saved places, routes.
+- querencia turns them into a graph I can search by meaning and draw.
+- It answers things like "what would I like in a city I have never been to?"
+- Runs locally, and as an MCP server so Claude can query it. My gym tracker reads it to tag walks.

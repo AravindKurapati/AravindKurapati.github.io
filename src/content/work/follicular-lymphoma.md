@@ -16,6 +16,7 @@ links:
   - { label: Code, url: "https://github.com/AravindKurapati/Follicular-Lymphoma-Subtypes" }
 ---
 
-Follicular lymphoma subtypes that predict how fast the disease moves are defined by RNA sequencing, which most labs do not have. H&E slides are everywhere, so the question was whether morphology alone carries the signal.
-
-Each gigapixel slide becomes 800 to 1,000 filtered tissue patches. A ViT encodes them, and a gated attention MIL model pools each slide into one prediction, with the attention weights showing which regions drove it. Two subtypes had only three or four slides each, so I narrowed the task to FL1 vs the rest rather than train a seven-way classifier that would memorise them.
+- Follicular lymphoma subtypes that predict progression need RNA sequencing, which most labs lack. H&E slides are everywhere.
+- Each gigapixel slide becomes 800 to 1,000 filtered tissue patches, encoded by a ViT.
+- A gated attention MIL model pools each slide into one prediction, and its attention shows which regions drove it.
+- Two subtypes had only three or four slides, so I framed it as FL1 vs the rest instead of a seven-way classifier.
