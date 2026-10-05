@@ -2,7 +2,7 @@
   "schema": "site-now",
   "version": 1,
   "month": "2026-09",
-  "generated_at": "2026-09-27T22:53:43-04:00",
+  "generated_at": "2026-10-04T21:22:06-04:00",
   "months": [
     "2025-10",
     "2025-11",
@@ -50,21 +50,21 @@
   },
   "books": {
     "last": {
-      "title": "Harry Potter and the Sorcerer's Stone",
+      "title": "Harry Potter and the Chamber of Secrets",
       "rating": 5.0,
-      "started": "2026-09-15",
-      "finished": "2026-09-18",
-      "pages": 309
+      "started": "2026-09-26",
+      "finished": "2026-09-29",
+      "pages": 294
     }
   },
   "gym": {
     "last": {
-      "split": "legs",
-      "date": "2026-09-23"
+      "split": "push",
+      "date": "2026-10-04"
     },
     "previous": {
-      "split": "pull",
-      "date": "2026-09-22"
+      "split": "legs",
+      "date": "2026-10-02"
     },
     "by_month": [
       0,
@@ -78,7 +78,7 @@
       0,
       1,
       13,
-      2
+      4
     ]
   },
   "yt": {
@@ -127,7 +127,7 @@
     }
   },
   "sleep": {
-    "avg_hours": 7.3,
+    "avg_hours": 8.0,
     "by_month": [
       0,
       0,
@@ -140,11 +140,11 @@
       0,
       0,
       0,
-      7.3
+      8.0
     ]
   },
   "meals": {
-    "count": 7,
+    "count": 18,
     "by_month": [
       0,
       0,
@@ -157,7 +157,7 @@
       0,
       0,
       3,
-      7
+      18
     ]
   },
   "place": {
