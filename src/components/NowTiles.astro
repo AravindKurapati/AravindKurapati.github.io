@@ -9,13 +9,15 @@ interface Props { compact?: boolean; }
 const { compact = false } = Astro.props;
 const first = monthLabel(now.months[0], true);
 const lastM = monthLabel(now.months[now.months.length - 1]);
-const topMax = now.yt?.topics.length ? Math.max(...now.yt.topics.map((t) => t[1] as number)) : 1;
 type Learning = { topic: string; through: string | null; by_year: [number, number][] };
 const learning = (now.yt as { learning?: Learning } | null)?.learning;
 const learnMax = learning ? Math.max(...learning.by_year.map(([, h]) => h)) : 1;
 const learnLast = learning?.by_year[learning.by_year.length - 1];
 const learnPartial = !!(learning?.through && learnLast && !learning.through.endsWith('-12-31') && learning.through.startsWith(String(learnLast[0])));
 const augGym = now.gym ? Math.max(...now.gym.by_month) : 0;
+type Food = { breakfast: { staple: string; with: string | null; pct: number }; mains: { count: number; dishes: number; top: string; top_pct: number } };
+const food = (now.meals as { habits?: Food | null } | null)?.habits ?? null;
+const FOOD_NOTES: Record<string, string> = { manna: 'health mix' };
 const reading: string[] = (now.books as { reading?: string[] } | null)?.reading ?? [];
 const cover = now.books ? await bookCover(now.books.last.title) : null;
 const gymPeakIdx = now.gym ? now.gym.by_month.indexOf(augGym) : 0;
@@ -62,16 +64,6 @@ const gymPeakIdx = now.gym ? now.gym.by_month.indexOf(augGym) : 0;
       </ul>
     </article>
   )}
-  {!compact && now.yt && now.yt.topics.length > 0 && (
-    <article class="tile">
-      <p class="lbl">YouTube · topics this month</p>
-      <ul class="bars">
-        {now.yt.topics.map(([t, n]) => (
-          <li><span>{t}</span><span class="bar" style={`width:${((n as number) / topMax) * 100}%`}></span><span class="n">{n}</span></li>
-        ))}
-      </ul>
-    </article>
-  )}
   {!compact && now.steps && (
     <article class="tile">
       <p class="lbl">Walking · steps per day</p>
@@ -90,9 +82,19 @@ const gymPeakIdx = now.gym ? now.gym.by_month.indexOf(augGym) : 0;
   )}
   {!compact && now.meals && (
     <article data-tone="platform" class="tile">
-      <p class="lbl">Meals · food diary</p>
-      <h3 class="big">{now.meals.count} logged</h3>
-      <p class="muted">in {monthLabel(now.month)}, in my own meal diary</p>
+      <p class="lbl">Food · what I eat</p>
+      {food ? (
+        <>
+          <h3 class="big food-head">Same breakfast, new dinner</h3>
+          <p class="muted">{titleCase(food.breakfast.staple)}{FOOD_NOTES[food.breakfast.staple] ? ` (${FOOD_NOTES[food.breakfast.staple]})` : ''}{food.breakfast.with ? ` and ${food.breakfast.with}` : ''} at {food.breakfast.pct}% of breakfasts.</p>
+          <p class="muted">{food.mains.dishes} different lunches and dinners in {food.mains.count}, {food.mains.top} in {food.mains.top_pct}% of them.</p>
+        </>
+      ) : (
+        <>
+          <h3 class="big">{now.meals.count} logged</h3>
+          <p class="muted">in {monthLabel(now.month)}, in my own meal diary</p>
+        </>
+      )}
       <Spark data={now.meals.by_month} label="meals logged / month" left={first} right={lastM} />
     </article>
   )}
@@ -116,6 +118,7 @@ const gymPeakIdx = now.gym ? now.gym.by_month.indexOf(augGym) : 0;
   @media (min-width: 1000px) { .book :global(.cover) { width: 110px; } }
   .big { font-size: 34px; line-height: 1.05; margin: 12px 0 4px; }
   .small { font-size: 20px; }
+  .food-head { font-size: 28px; }
   .stars { font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; margin-bottom: 6px; }
   .meta { font-family: var(--body); letter-spacing: 0; font-size: 15px; }
   .muted { font-size: 16px; }

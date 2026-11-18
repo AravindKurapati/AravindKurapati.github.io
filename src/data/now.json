@@ -2,7 +2,7 @@
   "schema": "site-now",
   "version": 1,
   "month": "2026-11",
-  "generated_at": "2026-11-18T13:32:44-05:00",
+  "generated_at": "2026-11-18T13:45:22-05:00",
   "months": [
     "2025-12",
     "2026-01",
@@ -86,28 +86,6 @@
     ]
   },
   "yt": {
-    "topics": [
-      [
-        "Music",
-        326
-      ],
-      [
-        "Movies/TV",
-        96
-      ],
-      [
-        "Comedy",
-        43
-      ],
-      [
-        "Vlogs",
-        25
-      ],
-      [
-        "Sports",
-        9
-      ]
-    ],
     "learning": {
       "topic": "Education",
       "through": "2026-11-18",
@@ -176,7 +154,21 @@
       18,
       79,
       51
-    ]
+    ],
+    "habits": {
+      "breakfast": {
+        "staple": "manna",
+        "with": "coffee",
+        "pct": 67,
+        "count": 58
+      },
+      "mains": {
+        "count": 115,
+        "dishes": 106,
+        "top": "rice",
+        "top_pct": 42
+      }
+    }
   },
   "place": {
     "name": "Apollo Bagels",
