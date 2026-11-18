@@ -9,8 +9,14 @@ interface Props { compact?: boolean; }
 const { compact = false } = Astro.props;
 const first = monthLabel(now.months[0], true);
 const lastM = monthLabel(now.months[now.months.length - 1]);
-const topMax = now.yt ? Math.max(...now.yt.topics.map((t) => t[1] as number)) : 1;
+const topMax = now.yt?.topics.length ? Math.max(...now.yt.topics.map((t) => t[1] as number)) : 1;
+type Learning = { topic: string; through: string | null; by_year: [number, number][] };
+const learning = (now.yt as { learning?: Learning } | null)?.learning;
+const learnMax = learning ? Math.max(...learning.by_year.map(([, h]) => h)) : 1;
+const learnLast = learning?.by_year[learning.by_year.length - 1];
+const learnPartial = !!(learning?.through && learnLast && !learning.through.endsWith('-12-31') && learning.through.startsWith(String(learnLast[0])));
 const augGym = now.gym ? Math.max(...now.gym.by_month) : 0;
+const reading: string[] = (now.books as { reading?: string[] } | null)?.reading ?? [];
 const cover = now.books ? await bookCover(now.books.last.title) : null;
 const gymPeakIdx = now.gym ? now.gym.by_month.indexOf(augGym) : 0;
 ---
@@ -31,6 +37,7 @@ const gymPeakIdx = now.gym ? now.gym.by_month.indexOf(augGym) : 0;
         <h3 class="big">{now.books.last.title}</h3>
         <p class="stars" aria-label={`${now.books.last.rating} out of 5`}>{stars(now.books.last.rating)}</p>
         <p class="muted">{now.books.last.pages} pages, {shortDate(now.books.last.started)} to {shortDate(now.books.last.finished)}</p>
+        {reading.length > 0 && <p class="muted">Reading now: {reading.join(' and ')}</p>}
       </div>
       {cover && <Image class="cover" src={cover} inferSize widths={[120, 240]} sizes="120px" alt={`Cover of ${now.books.last.title}`} />}
     </article>
@@ -43,7 +50,19 @@ const gymPeakIdx = now.gym ? now.gym.by_month.indexOf(augGym) : 0;
       <Spark data={now.gym.by_month} label={`${augGym} sessions in ${monthLabel(now.months[gymPeakIdx])}`} left={first} right={lastM} />
     </article>
   )}
-  {!compact && now.yt && (
+  {!compact && learning && learnLast && (
+    <article data-tone="sky" class="tile">
+      <p class="lbl">YouTube · hours of {learning.topic.toLowerCase()} a year</p>
+      <h3 class="big">{learnLast[1]}h</h3>
+      <p class="muted">in {learnLast[0]}{learnPartial ? ' so far' : ''}, estimated from video length</p>
+      <ul class="bars years">
+        {learning.by_year.map(([y, h]) => (
+          <li><span>{y}</span><span class="bar" style={`width:${(h / learnMax) * 100}%`}></span><span class="n">{h}</span></li>
+        ))}
+      </ul>
+    </article>
+  )}
+  {!compact && now.yt && now.yt.topics.length > 0 && (
     <article class="tile">
       <p class="lbl">YouTube · topics this month</p>
       <ul class="bars">
@@ -106,4 +125,5 @@ const gymPeakIdx = now.gym ? now.gym.by_month.indexOf(augGym) : 0;
   .bars li { display: grid; grid-template-columns: 90px 1fr 28px; gap: 10px; align-items: center; font-size: 15px; margin: 8px 0; }
   .bar { height: 8px; background: var(--ink); border-radius: 4px; }
   .n { font-family: var(--mono); font-size: 12px; text-align: right; }
+  .years li { grid-template-columns: 44px 1fr 32px; margin: 5px 0; font-family: var(--mono); font-size: 12px; }
 </style>

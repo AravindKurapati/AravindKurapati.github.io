@@ -2,5 +2,8 @@ import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   site: 'https://aravindkurapati.github.io',
-  image: { domains: ['covers.openlibrary.org'] },
+  image: {
+    domains: ['covers.openlibrary.org'],
+    remotePatterns: [{ protocol: 'https', hostname: '**.archive.org' }],
+  },
 });

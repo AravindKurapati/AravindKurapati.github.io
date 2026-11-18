@@ -1,11 +1,9 @@
 {
   "schema": "site-now",
   "version": 1,
-  "month": "2026-09",
-  "generated_at": "2026-10-04T21:22:06-04:00",
+  "month": "2026-11",
+  "generated_at": "2026-11-18T13:32:44-05:00",
   "months": [
-    "2025-10",
-    "2025-11",
     "2025-12",
     "2026-01",
     "2026-02",
@@ -15,26 +13,26 @@
     "2026-06",
     "2026-07",
     "2026-08",
-    "2026-09"
+    "2026-09",
+    "2026-10",
+    "2026-11"
   ],
   "films": {
     "last": [
       {
-        "title": "Liar Liar",
-        "year": 1997,
-        "rating": 5.0,
-        "date": "2026-09-11"
+        "title": "Ranabaali",
+        "year": 2026,
+        "rating": 3.5,
+        "date": "2026-11-16"
       },
       {
-        "title": "Donnie Brasco",
-        "year": 1997,
-        "rating": 4.0,
-        "date": "2026-09-03"
+        "title": "Jailer 2",
+        "year": 2026,
+        "rating": 3.0,
+        "date": "2026-11-15"
       }
     ],
     "by_month": [
-      1,
-      2,
       7,
       2,
       1,
@@ -44,31 +42,35 @@
       2,
       5,
       9,
-      2
+      2,
+      2,
+      5
     ],
-    "total": 35
+    "total": 39
   },
   "books": {
     "last": {
-      "title": "Harry Potter and the Chamber of Secrets",
+      "title": "Harry Potter and the Goblet of Fire",
       "rating": 5.0,
-      "started": "2026-09-26",
-      "finished": "2026-09-29",
-      "pages": 294
-    }
+      "started": "2026-10-15",
+      "finished": "2026-10-22",
+      "pages": 734
+    },
+    "reading": [
+      "Harry Potter and the Order of the Phoenix",
+      "AI Engineering"
+    ]
   },
   "gym": {
     "last": {
       "split": "push",
-      "date": "2026-10-04"
+      "date": "2026-11-13"
     },
     "previous": {
-      "split": "legs",
-      "date": "2026-10-02"
+      "split": "pull",
+      "date": "2026-11-11"
     },
     "by_month": [
-      0,
-      0,
       0,
       0,
       0,
@@ -78,56 +80,72 @@
       0,
       1,
       13,
-      4
+      4,
+      18,
+      6
     ]
   },
   "yt": {
     "topics": [
       [
+        "Music",
+        326
+      ],
+      [
         "Movies/TV",
-        30
+        96
       ],
       [
         "Comedy",
-        17
+        43
       ],
       [
         "Vlogs",
-        15
+        25
       ],
       [
-        "Education",
-        13
-      ],
-      [
-        "Music",
-        8
+        "Sports",
+        9
       ]
-    ]
-  },
-  "steps": {
-    "avg": 5884,
-    "by_month": [
-      5822,
-      4878,
-      3602,
-      4578,
-      2699,
-      4134,
-      4965,
-      6476,
-      6501,
-      6039,
-      4662,
-      5884
     ],
-    "peak": {
-      "month": "2026-06",
-      "avg": 6501
+    "learning": {
+      "topic": "Education",
+      "through": "2026-11-18",
+      "by_year": [
+        [
+          2020,
+          93
+        ],
+        [
+          2021,
+          58
+        ],
+        [
+          2022,
+          68
+        ],
+        [
+          2023,
+          72
+        ],
+        [
+          2024,
+          56
+        ],
+        [
+          2025,
+          105
+        ],
+        [
+          2026,
+          138
+        ]
+      ]
     }
   },
+  "steps": null,
   "sleep": {
-    "avg_hours": 8.0,
+    "avg_hours": 7.2,
     "by_month": [
       0,
       0,
@@ -138,16 +156,14 @@
       0,
       0,
       0,
-      0,
-      0,
-      8.0
+      8.0,
+      7.1,
+      7.1
     ]
   },
   "meals": {
-    "count": 18,
+    "count": 51,
     "by_month": [
-      0,
-      0,
       0,
       0,
       0,
@@ -157,7 +173,9 @@
       0,
       0,
       3,
-      18
+      18,
+      79,
+      51
     ]
   },
   "place": {

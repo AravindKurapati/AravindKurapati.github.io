@@ -36,6 +36,13 @@ test('no coordinates, video ids or money in string values', () => {
   }
 });
 
+test('yt learning is only topic, through date and [year, hours] integers', () => {
+  const l = now.yt?.learning;
+  if (!l) return;
+  assert.deepEqual(Object.keys(l).sort(), ['by_year', 'through', 'topic']);
+  for (const row of l.by_year) assert.ok(row.length === 2 && row.every(Number.isInteger), `bad row ${JSON.stringify(row)}`);
+});
+
 test('12-month series line up with months', () => {
   assert.equal(now.months.length, 12);
   for (const k of ['films', 'gym', 'steps']) if (now[k]) assert.equal(now[k].by_month.length, 12, k);
