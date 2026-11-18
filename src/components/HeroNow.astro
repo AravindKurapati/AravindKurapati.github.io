@@ -3,6 +3,8 @@ import now from '../data/now.json';
 import { longMonth, shortDate, stars, titleCase } from '../lib/format';
 
 const rows = [
+  // Hand-written (not from now.json): what I'm building. Update when the project changes.
+  { k: 'Building', v: 'Inference lab: making vLLM faster on real agent workloads', meta: 'in progress' },
   now.films && { k: 'Watched', v: `${now.films.last[0].title}`, meta: stars(now.films.last[0].rating) },
   now.books && { k: 'Read', v: now.books.last.title, meta: stars(now.books.last.rating) },
   now.gym && { k: 'Gym', v: `${titleCase(now.gym.last.split)} day`, meta: shortDate(now.gym.last.date) },

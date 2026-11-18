@@ -6,15 +6,20 @@ import brussels from '../assets/europe/brussels.jpeg';
 import budapest from '../assets/europe/budapest.jpeg';
 import athensParthenon from '../assets/europe/athens-parthenon.jpeg';
 import athensAcropolis from '../assets/europe/athens-acropolis.jpeg';
+// Posters: TMDB (w780), fetched with the film-tracker client.
+import rpoPoster from '../assets/films/ready-player-one.jpg';
+import baahubaliPoster from '../assets/films/baahubali.jpg';
+import avatarPoster from '../assets/films/avatar.jpg';
+import tdkrPoster from '../assets/films/dark-knight-rises.jpg';
 
 export const letterboxd = 'https://letterboxd.com/parzivallll/';
 
 // Letterboxd profile favourites, from the 2026-09-21 export (profile.csv).
 export const topFour = [
-  { title: 'Ready Player One', year: 2018, url: 'https://letterboxd.com/film/ready-player-one/' },
-  { title: 'Baahubali: The Beginning', year: 2015, url: 'https://letterboxd.com/film/bahubali-the-beginning/' },
-  { title: 'Avatar', year: 2009, url: 'https://letterboxd.com/film/avatar/' },
-  { title: 'The Dark Knight Rises', year: 2012, url: 'https://letterboxd.com/film/the-dark-knight-rises/' },
+  { title: 'Ready Player One', year: 2018, url: 'https://letterboxd.com/film/ready-player-one/', poster: rpoPoster },
+  { title: 'Baahubali: The Beginning', year: 2015, url: 'https://letterboxd.com/film/bahubali-the-beginning/', poster: baahubaliPoster },
+  { title: 'Avatar', year: 2009, url: 'https://letterboxd.com/film/avatar/', poster: avatarPoster },
+  { title: 'The Dark Knight Rises', year: 2012, url: 'https://letterboxd.com/film/the-dark-knight-rises/', poster: tdkrPoster },
 ];
 
 export const europe = [
