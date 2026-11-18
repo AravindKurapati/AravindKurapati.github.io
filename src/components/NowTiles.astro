@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import Spark from './Spark.astro';
+import { bookCover } from '../lib/cover';
 import now from '../data/now.json';
 import { shortDate, monthLabel, stars, titleCase } from '../lib/format';
 
@@ -9,6 +11,7 @@ const first = monthLabel(now.months[0], true);
 const lastM = monthLabel(now.months[now.months.length - 1]);
 const topMax = now.yt ? Math.max(...now.yt.topics.map((t) => t[1] as number)) : 1;
 const augGym = now.gym ? Math.max(...now.gym.by_month) : 0;
+const cover = now.books ? await bookCover(now.books.last.title) : null;
 const gymPeakIdx = now.gym ? now.gym.by_month.indexOf(augGym) : 0;
 ---
 <div class="now-grid" data-compact={compact}>
@@ -22,11 +25,14 @@ const gymPeakIdx = now.gym ? now.gym.by_month.indexOf(augGym) : 0;
     </article>
   )}
   {now.books && (
-    <article data-tone="sky" class="tile">
-      <p class="lbl">Books · last finished</p>
-      <h3 class="big">{now.books.last.title}</h3>
-      <p class="stars" aria-label={`${now.books.last.rating} out of 5`}>{stars(now.books.last.rating)}</p>
-      <p class="muted">{now.books.last.pages} pages, {shortDate(now.books.last.started)} to {shortDate(now.books.last.finished)}</p>
+    <article data-tone="sky" class="tile book">
+      <div>
+        <p class="lbl">Books · last finished</p>
+        <h3 class="big">{now.books.last.title}</h3>
+        <p class="stars" aria-label={`${now.books.last.rating} out of 5`}>{stars(now.books.last.rating)}</p>
+        <p class="muted">{now.books.last.pages} pages, {shortDate(now.books.last.started)} to {shortDate(now.books.last.finished)}</p>
+      </div>
+      {cover && <Image class="cover" src={cover} inferSize widths={[120, 240]} sizes="120px" alt={`Cover of ${now.books.last.title}`} />}
     </article>
   )}
   {now.gym && (
@@ -86,6 +92,9 @@ const gymPeakIdx = now.gym ? now.gym.by_month.indexOf(augGym) : 0;
   .now-grid { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
   @media (min-width: 720px) { .now-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 1000px) { .now-grid { grid-template-columns: repeat(3, 1fr); } }
+  .book { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; }
+  .book :global(.cover) { width: 96px; height: auto; border-radius: 6px; box-shadow: 0 6px 18px rgba(0,0,0,0.18); }
+  @media (min-width: 1000px) { .book :global(.cover) { width: 110px; } }
   .big { font-size: 34px; line-height: 1.05; margin: 12px 0 4px; }
   .small { font-size: 20px; }
   .stars { font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; margin-bottom: 6px; }
